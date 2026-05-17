@@ -1,0 +1,31 @@
+services:
+  # Backend Service (Node.js)
+  - type: web
+    name: crm-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: DB_SERVER
+        sync: false # You will set this in the Render Dashboard
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  # Frontend Service (Static Site)
+  - type: web
+    name: crm-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishDir: build
+    routes:
+      - type: rewrite
+        src: /*
+        dest: /index.html
