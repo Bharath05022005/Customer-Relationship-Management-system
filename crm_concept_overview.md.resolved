@@ -1,0 +1,212 @@
+# 🏢 VAALTIC CRM — Full System Concept Overview
+> **Project Path:** `d:\CUSTOMER` | **Stack:** React + Vite (Frontend) + Node/Express (Backend) + MS SQL Server (Database)
+
+---
+
+## 🗺️ Big Picture Architecture
+
+```mermaid
+graph TD
+    A["🌐 Browser: localhost:3000"] --> B["LoginPage.jsx\n(Role Selector)"]
+    B -->|"Admin Tab\nadmin@vaaltic.com / CRM123"| C["🛡️ AdminDashboard.jsx\n/admin/*"]
+    B -->|"Salesman Tab\nDB Login via /auth/signin"| D["📊 SalesmanDashboard.jsx\n/salesman/*"]
+    C --> E["11 Admin Modules\n(Full Global Access)"]
+    D --> F["8 Salesman Modules\n(Own Records Only)"]
+    E --> G["🗄️ MS SQL Server\n(All Tables)"]
+    F --> G
+    G --> H["Backend API\nNode/Express :5000"]
+    H --> G
+```
+
+---
+
+## 🔐 Step 1 — Authentication (Login Flow)
+
+| Feature | Admin | Salesman |
+|---|---|---|
+| **Login Method** | Hardcoded credentials in frontend | Live DB call via `/auth/signin` |
+| **Credentials** | `admin@vaaltic.com` / `CRM123` | Email + Password stored in `Salesman` table |
+| **Sign Up** | ❌ No self-registration | ✅ `/auth/signup` creates a new `Salesman` record |
+| **Session Storage** | `localStorage` → `role: 'admin'` | `localStorage` → `role: 'salesman'`, `userId`, `username` |
+| **Redirect After Login** | `/admin/` route | `/salesman/` route |
+
+> [!IMPORTANT]
+> Admin login is **hardcoded** in `LoginPage.jsx` (lines 75–76). This is intentional for demo/prototype. For production, move to a `Admins` DB table with hashed passwords.
+
+---
+
+## 🛡️ ADMIN Process — What Admin Can Do
+
+### Admin Route: `/admin/*`
+Admin has **global, unrestricted access** to all records in every module.
+
+```
+/admin/dashboard        → DashboardAnalyticsModule   (system-wide KPIs)
+/admin/leads            → LeadModule (role="admin")  (ALL leads)
+/admin/contacts         → ContactModule              (ALL contacts)
+/admin/deals            → DealModule                 (ALL deals/pipelines)
+/admin/followups        → FollowUpModule             (ALL follow-ups)
+/admin/activitylogs     → ActivityLogModule          (system audit trail)
+/admin/segments         → CustomerSegmentModule      (ALL segments)
+/admin/quotation        → QuotationBuilderModule     (ALL quotations)
+/admin/emailIntegration → EmailIntegrationModule     (email config)
+/admin/roleaccess       → RoleAccessModule           ⭐ Admin Only
+/admin/approvals        → ApprovalsModule            ⭐ Admin Only
+```
+
+### Admin Exclusive Modules
+
+| Module | Purpose |
+|---|---|
+| **Role Access** (`/api/roles`) | Create roles, assign permissions (lead/deal/email), assign roles to Salesman accounts |
+| **Approvals** (`/api/approvals`) | View all `Pending` approval requests from salesmen, Approve or Reject with remarks |
+
+### Admin API Actions (Backend)
+- **Leads**: Full CRUD — GET all, POST, PUT, DELETE any lead
+- **Contacts**: Full CRUD — not filtered by salesman
+- **Deals**: Full CRUD — not filtered by salesman
+- **Roles**: GET all roles, POST create role, POST assign role to user
+- **Approvals**: GET pending, POST approve/reject
+
+---
+
+## 👔 SALESMAN Process — What Salesman Can Do
+
+### Salesman Route: `/salesman/*` (tab-based, not URL-based)
+Salesman sees **only their own assigned records** — `salesmanId` is passed to every module.
+
+```
+Tab: leads       → LeadModule (role="salesman", salesmanId=X)
+Tab: contacts    → ContactModule (role="salesman", salesmanId=X)
+Tab: deals       → DealModule (role="salesman", salesmanId=X)
+Tab: followups   → FollowUpModule (role="salesman", salesmanId=X)
+Tab: activity    → ActivityLogModule (role="salesman", salesmanId=X)
+Tab: segments    → CustomerSegmentModule (role="salesman", salesmanId=X)
+Tab: quotes      → QuotationBuilderModule (role="salesman", salesmanId=X)
+Tab: email       → EmailIntegrationModule (role="salesman", salesmanId=X)
+```
+
+> [!NOTE]
+> Salesman does **NOT** have access to:
+> - `RoleAccessModule` (manage permissions)
+> - `ApprovalsModule` (approve/reject)
+> - `DashboardAnalyticsModule` (system-wide KPIs)
+
+### Salesman Approval Workflow
+```
+Salesman creates a Quotation/Deal 
+        ↓
+Submits for approval → POST /api/approvals/submit
+        ↓
+Admin sees it in Approvals module (Status = 'Pending')
+        ↓
+Admin approves/rejects → POST /api/approvals/update
+```
+
+---
+
+## 🗄️ Database Tables (MS SQL Server)
+
+| Table | Used By | Purpose |
+|---|---|---|
+| `Salesman` | Auth + All | User accounts, credentials, role assignment |
+| `Leads` | Lead Module | Lead records with `assignedTo` field |
+| `Contacts` | Contact Module | Contact database |
+| `Deals` | Deal Module | Sales pipeline stages |
+| `FollowUps` | FollowUp Module | Scheduled follow-ups |
+| `Activities` | Activity Log | Audit trail of actions |
+| `CustomerSegments` | Segment Module | Customer groupings |
+| `Quotations` | Quotation Module | Quote builder data |
+| `Emails` | Email Module | Email integration logs |
+| `Roles` | Role Module | Role definitions + permissions |
+| `Approvals` | Approval Module | Approval requests queue |
+
+---
+
+## 🔄 Data Flow: Role-Based Filtering
+
+```
+Frontend Module receives: role="salesman" + salesmanId=5
+        ↓
+Module uses role prop to filter API call:
+  - role="admin"    → GET /api/leads/           (all leads)
+  - role="salesman" → GET /api/leads?assignedTo=5  (only assigned)
+        ↓
+Backend query filters with WHERE assignedTo = @salesmanId
+        ↓
+Salesman sees ONLY their records ✅
+```
+
+---
+
+## 📦 Backend Server Structure
+
+```
+backend/
+├── server.js          ← Express app, all routes mounted
+├── auth.js            ← /auth/signin + /auth/signup
+├── db.js              ← MS SQL connection pool
+└── routes/
+    ├── leadRoutes.js      → /api/leads
+    ├── contactRoutes.js   → /api/contacts
+    ├── dealRoutes.js      → /api/deals
+    ├── followupRoutes.js  → /api/followups
+    ├── activityRoutes.js  → /api/activities
+    ├── segmentRoutes.js   → /api/segments
+    ├── quotationRoutes.js → /api/quotes
+    ├── emailRoutes.js     → /api/email
+    ├── dashboardRoutes.js → /api/salesman (dashboard KPIs)
+    ├── roleRoutes.js      → /api/roles
+    └── approvalRoutes.js  → /api/approvals
+```
+
+---
+
+## 📦 Frontend Structure
+
+```
+frontend/src/
+├── App.jsx              ← Router: /, /admin/*, /salesman/*
+├── LoginPage.jsx        ← Auth entry point (Admin + Salesman tabs)
+├── AdminDashboard.jsx   ← Admin layout + nested URL routes
+├── SalesmanDashboard.jsx← Salesman layout + tab-based navigation
+├── components/
+│   ├── Sidebar.jsx      ← Shared sidebar (adapts to role prop)
+│   └── modules/
+│       ├── LeadModule.jsx
+│       ├── ContactModule.jsx
+│       ├── DealModule.jsx
+│       ├── FollowUpModule.jsx
+│       ├── ActivityLogModule.jsx
+│       ├── CustomerSegmentModule.jsx
+│       ├── QuotationBuilderModule.jsx
+│       ├── EmailIntegrationModule.jsx
+│       ├── DashboardAnalyticsModule.jsx ← Admin only
+│       ├── RoleAccessModule.jsx         ← Admin only
+│       └── ApprovalsModule.jsx          ← Admin only
+```
+
+---
+
+## ⚠️ Known Gaps / Improvement Points
+
+| Issue | Impact | Recommended Fix |
+|---|---|---|
+| Admin login is hardcoded | Security risk in production | Move to `Admins` DB table with bcrypt hashed passwords |
+| No JWT/token auth | Any user can call any API directly | Add JWT middleware to backend routes |
+| `leadRoutes.js` GET `/` returns ALL leads | Salesman filter is frontend-only | Add `?assignedTo=` query filter in backend |
+| Password stored plain text in `Salesman` table | Security risk | Use `bcrypt` to hash passwords |
+| Admin username hardcoded as "Admin User" | Poor personalization | Pull from session/DB |
+
+---
+
+## ✅ What Is Working Correctly
+
+- ✅ Role separation: Admin → `/admin/*`, Salesman → `/salesman/*`
+- ✅ `salesmanId` passed from localStorage to all modules
+- ✅ Unauthorized salesman cannot access admin URL (redirected to login)
+- ✅ Approval workflow: Submit → Pending → Admin approves/rejects
+- ✅ Role management: Admin can create roles and assign to salesman
+- ✅ 11 backend routes mounted and active on server startup
+- ✅ DB health check middleware on every request
+- ✅ Shared `Sidebar.jsx` with `role` prop controls which tabs are shown

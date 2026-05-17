@@ -1,0 +1,836 @@
+/* Base Styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.bg-light-gray {
+  background-color: #f3f4f6; /* Equivalent to Tailwind's bg-gray-100 */
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #0f172a; /* Equivalent to Tailwind's bg-slate-900 */
+  color: #fff;
+  transition: width 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; /* Prevents shrinking */
+}
+
+.sidebar.collapsed {
+  width: 64px; /* Equivalent to Tailwind's w-16 */
+}
+
+.sidebar:not(.collapsed) {
+  width: 256px; /* Equivalent to Tailwind's w-64 */
+}
+
+/* Sidebar Logo/Header */
+.sidebar-header {
+  padding: 16px; /* Equivalent to Tailwind's p-4 */
+  border-bottom: 1px solid #334155; /* Equivalent to Tailwind's border-b border-slate-700 */
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Equivalent to Tailwind's space-x-3 */
+}
+
+.sidebar-logo-icon {
+  width: 32px; /* Equivalent to Tailwind's w-8 */
+  height: 32px; /* Equivalent to Tailwind's h-8 */
+  background-color: #2563eb; /* Equivalent to Tailwind's bg-blue-600 */
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+.sidebar-title {
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+  font-weight: bold;
+}
+
+.sidebar-subtitle {
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  color: #94a3b8; /* Equivalent to Tailwind's text-slate-400 */
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 16px; /* Equivalent to Tailwind's p-4 */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Equivalent to Tailwind's space-y-2 */
+  overflow-y: auto;
+}
+
+.sidebar-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Equivalent to Tailwind's space-x-3 */
+  padding: 8px 12px; /* Equivalent to Tailwind's px-3 py-2 */
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  transition: background-color 0.2s, color 0.2s;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  color: #cbd5e1; /* Default color for inactive items */
+}
+
+.sidebar-nav-item-icon {
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+  flex-shrink: 0;
+}
+
+.sidebar-nav-item.active {
+  background-color: #2563eb; /* Equivalent to Tailwind's bg-blue-600 */
+  color: #fff;
+}
+
+.sidebar-nav-item:not(.active):hover {
+  background-color: #1e293b; /* Equivalent to Tailwind's hover:bg-slate-800 */
+  color: #fff;
+}
+
+/* Sidebar Logout */
+.sidebar-logout {
+  padding: 16px; /* Equivalent to Tailwind's p-4 */
+  border-top: 1px solid #334155; /* Equivalent to Tailwind's border-t border-slate-700 */
+}
+
+.sidebar-logout-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Equivalent to Tailwind's space-x-3 */
+  padding: 8px 12px; /* Equivalent to Tailwind's px-3 py-2 */
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  color: #cbd5e1; /* Equivalent to Tailwind's text-slate-300 */
+  transition: background-color 0.2s, color 0.2s;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+}
+
+.sidebar-logout-button:hover {
+  background-color: #1e293b; /* Equivalent to Tailwind's hover:bg-slate-800 */
+  color: #fff;
+}
+
+.sidebar-logout-button-icon {
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+  flex-shrink: 0;
+}
+
+/* Main Content Area */
+.main-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  background-color: #fff;
+  border-bottom: 1px solid #e5e7eb; /* Equivalent to Tailwind's border-b border-gray-200 */
+  padding: 16px 24px; /* Equivalent to Tailwind's px-6 py-4 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left-section {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Equivalent to Tailwind's space-x-4 */
+}
+
+.header-toggle-button {
+  padding: 8px; /* Equivalent to Tailwind's p-2 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  transition: background-color 0.2s;
+}
+
+.header-toggle-button:hover {
+  background-color: #f3f4f6; /* Equivalent to Tailwind's hover:bg-gray-100 */
+}
+
+.header-toggle-button-icon {
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+.header-title {
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+  font-weight: 600; /* Equivalent to Tailwind's font-semibold */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.header-subtitle {
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+.header-right-section {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Equivalent to Tailwind's space-x-4 */
+}
+
+.header-notification-button {
+  padding: 8px; /* Equivalent to Tailwind's p-2 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.header-notification-button:hover {
+  background-color: #f3f4f6; /* Equivalent to Tailwind's hover:bg-gray-100 */
+}
+
+.header-notification-button-icon {
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+}
+
+.header-notification-badge {
+  position: absolute;
+  top: -4px; /* Adjusted from -top-1 to better match image */
+  right: -4px; /* Adjusted from -right-1 to better match image */
+  width: 10px; /* Slightly smaller for a tighter look */
+  height: 10px; /* Slightly smaller for a tighter look */
+  background-color: #ef4444; /* Equivalent to Tailwind's bg-red-500 */
+  border-radius: 9999px; /* Equivalent to Tailwind's rounded-full */
+  border: 1px solid #fff; /* Small white border */
+}
+
+.header-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Equivalent to Tailwind's space-x-3 */
+}
+
+.header-user-avatar {
+  width: 32px; /* Equivalent to Tailwind's w-8 */
+  height: 32px; /* Equivalent to Tailwind's h-8 */
+  background-color: #2563eb; /* Equivalent to Tailwind's bg-blue-600 */
+  border-radius: 9999px; /* Equivalent to Tailwind's rounded-full */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+  flex-shrink: 0; /* Prevent shrinking if content is too wide */
+}
+
+.header-user-name {
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.header-user-role {
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+/* Content Area */
+.main-content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px; /* Equivalent to Tailwind's p-6 */
+}
+
+/* Generic Spacing (for consistency, mimicking Tailwind's space-y) */
+.vertical-spacing-6 > *:not(:first-child) {
+  margin-top: 24px;
+}
+
+.vertical-spacing-4 > *:not(:first-child) {
+    margin-top: 16px;
+}
+
+/* Dashboard Content */
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  gap: 24px; /* Equivalent to Tailwind's gap-6 */
+  grid-template-columns: repeat(1, minmax(0, 1fr)); /* Equivalent to Tailwind's grid-cols-1 */
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Equivalent to Tailwind's md:grid-cols-2 */
+  }
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* Equivalent to Tailwind's lg:grid-cols-3 */
+  }
+}
+
+@media (min-width: 1280px) { /* xl breakpoint */
+  .stats-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)); /* Equivalent to Tailwind's xl:grid-cols-6 */
+  }
+}
+
+.stat-card {
+  padding: 24px; /* Equivalent to Tailwind's p-6 */
+  border-radius: 12px; /* Equivalent to Tailwind's rounded-xl */
+  color: #fff; /* White text for all stat cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px; /* Adjust as needed */
+}
+
+/* Specific background colors/gradients for stat cards */
+.stat-card-blue {
+  background-image: linear-gradient(to right, #3b82f6, #2563eb); /* from-blue-500 to-blue-600 */
+}
+
+.stat-card-green {
+  background-image: linear-gradient(to right, #22c55e, #16a34a); /* from-green-500 to-green-600 */
+}
+
+.stat-card-purple {
+  background-image: linear-gradient(to right, #a855f7, #9333ea); /* from-purple-500 to-purple-600 */
+}
+
+.stat-card-orange {
+  background-image: linear-gradient(to right, #f97316, #ea580c); /* from-orange-500 to-orange-600 */
+}
+
+.stat-card-red {
+  background-image: linear-gradient(to right, #ef4444, #dc2626); /* from-red-500 to-red-600 */
+}
+
+.stat-card-indigo {
+  background-image: linear-gradient(to right, #6366f1, #4f46e5); /* from-indigo-500 to-indigo-600 */
+}
+
+.stat-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Align items to the top */
+  width: 100%;
+}
+
+.stat-card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 14px; /* text-sm */
+  opacity: 0.8; /* Slight transparency for label */
+  margin-bottom: 8px; /* space below label */
+}
+
+.stat-value {
+  font-size: 30px; /* text-3xl or larger, adjusted for prominence */
+  font-weight: bold;
+}
+
+.stat-icon {
+  font-size: 40px; /* text-4xl or larger for the icon */
+  opacity: 0.7; /* Slightly transparent icon */
+  align-self: flex-end; /* Pushes icon to bottom-right if flex-col */
+}
+
+/* Recent Activities and Team Performance Grid */
+.secondary-grid {
+  display: grid;
+  gap: 24px; /* Equivalent to Tailwind's gap-6 */
+  grid-template-columns: repeat(1, minmax(0, 1fr)); /* Equivalent to Tailwind's grid-cols-1 */
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+  .secondary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Equivalent to Tailwind's lg:grid-cols-2 */
+  }
+}
+
+.card {
+  background-color: #fff;
+  padding: 24px; /* Equivalent to Tailwind's p-6 */
+  border-radius: 12px; /* Equivalent to Tailwind's rounded-xl */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Equivalent to Tailwind's shadow-sm */
+  border: 1px solid #e5e7eb; /* Equivalent to Tailwind's border border-gray-200 */
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px; /* Equivalent to Tailwind's mb-6 */
+}
+
+.card-title {
+  font-size: 18px; /* Equivalent to Tailwind's text-lg */
+  font-weight: 600; /* Equivalent to Tailwind's font-semibold */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.card-icon-more {
+  font-size: 20px; /* Equivalent to Tailwind's text-xl */
+  color: #9ca3af; /* Equivalent to Tailwind's text-gray-400 */
+}
+
+/* .activity-list removed: empty ruleset */
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Equivalent to Tailwind's space-x-3 */
+}
+
+.activity-dot {
+  width: 8px; /* Equivalent to Tailwind's w-2 */
+  height: 8px; /* Equivalent to Tailwind's h-2 */
+  border-radius: 9999px; /* Equivalent to Tailwind's rounded-full */
+  flex-shrink: 0;
+}
+
+.activity-dot-blue {
+  background-color: #3b82f6; /* Equivalent to Tailwind's bg-blue-500 */
+}
+
+/* Other dot colors might be needed if more activity types are shown */
+.activity-dot-green {
+    background-color: #22c55e;
+}
+.activity-dot-purple {
+    background-color: #a855f7;
+}
+.activity-dot-orange {
+    background-color: #f97316;
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-user {
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+  font-weight: 500;
+}
+
+.activity-description {
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+.activity-time {
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  color: #9ca3af; /* Equivalent to Tailwind's text-gray-400 */
+  margin-left: auto; /* Pushes time to the right */
+}
+
+/* Team Performance */
+/* .team-performance-list removed: empty ruleset */
+
+.team-member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.team-member-details {
+  text-align: left;
+}
+
+.team-member-name {
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.team-member-stats {
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+.team-member-summary {
+  text-align: right;
+}
+
+.team-member-revenue {
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  font-weight: 600; /* Equivalent to Tailwind's font-semibold */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.team-member-conversion {
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  color: #16a34a; /* Equivalent to Tailwind's text-green-600 */
+}
+
+/* Lead Management Section */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px; /* Equivalent to Tailwind's mb-6 */
+}
+
+.section-title {
+  font-size: 24px; /* Equivalent to Tailwind's text-2xl */
+  font-weight: bold;
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.add-button {
+  background-color: #2563eb; /* Equivalent to Tailwind's bg-blue-600 */
+  color: #fff;
+  padding: 8px 16px; /* Equivalent to Tailwind's px-4 py-2 */
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Equivalent to Tailwind's space-x-2 */
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-button:hover {
+  background-color: #1d4ed8; /* Equivalent to Tailwind's hover:bg-blue-700 */
+}
+
+.add-button-icon {
+  font-size: 18px; /* Equivalent to Tailwind's text-lg */
+}
+
+.lead-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px; /* Equivalent to Tailwind's mb-6 */
+}
+
+.lead-search-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Equivalent to Tailwind's space-x-4 */
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  color: #9ca3af; /* Equivalent to Tailwind's text-gray-400 */
+  position: absolute;
+  left: 12px; /* Equivalent to Tailwind's left-3 */
+  top: 50%;
+  transform: translateY(-50%); /* Equivalent to Tailwind's -translate-y-1/2 */
+  font-size: 20px; /* Adjusted for icon size */
+}
+
+.search-input {
+  padding: 8px 16px 8px 40px; /* Equivalent to Tailwind's pl-10 pr-4 py-2 */
+  border: 1px solid #d1d5db; /* Equivalent to Tailwind's border border-gray-300 */
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  outline: none;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Mimicking Tailwind's focus:ring-2 focus:ring-blue-500 */
+  border-color: transparent; /* Mimicking Tailwind's focus:border-transparent */
+}
+
+.filter-button,
+.export-button {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Equivalent to Tailwind's space-x-2 */
+  padding: 8px 12px; /* Equivalent to Tailwind's px-3 py-2 */
+  border: 1px solid #d1d5db; /* Equivalent to Tailwind's border border-gray-300 */
+  border-radius: 8px; /* Equivalent to Tailwind's rounded-lg */
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 16px;
+}
+
+.filter-button:hover,
+.export-button:hover {
+  background-color: #f9fafb; /* Equivalent to Tailwind's hover:bg-gray-50 */
+}
+
+.filter-button-icon,
+.export-button-icon {
+  font-size: 18px; /* Equivalent to Tailwind's text-lg */
+}
+
+/* Lead Table */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse; /* For a clean table look */
+}
+
+.data-table thead tr {
+  border-bottom: 1px solid #e5e7eb; /* Equivalent to Tailwind's border-b border-gray-200 */
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px 16px; /* Equivalent to Tailwind's py-3 px-4 */
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid #f3f4f6; /* Equivalent to Tailwind's border-b border-gray-100 */
+  transition: background-color 0.2s;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f9fafb; /* Equivalent to Tailwind's hover:bg-gray-50 */
+}
+
+.data-table td {
+  padding: 12px 16px; /* Equivalent to Tailwind's py-3 px-4 */
+  color: #111827; /* Default text color for table cells */
+}
+
+.lead-name-cell p:first-child {
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+}
+
+.lead-name-cell p:last-child {
+  font-size: 14px; /* Equivalent to Tailwind's text-sm */
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+.created-date-cell {
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+.status-badge {
+  padding: 4px 8px; /* Equivalent to Tailwind's px-2 py-1 */
+  border-radius: 9999px; /* Equivalent to Tailwind's rounded-full */
+  font-size: 12px; /* Equivalent to Tailwind's text-xs */
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+  display: inline-block; /* To make padding and border-radius work correctly */
+}
+
+.status-badge-green {
+  background-color: #d1fae5; /* Equivalent to Tailwind's bg-green-100 */
+  color: #065f46; /* Equivalent to Tailwind's text-green-800 */
+}
+
+.status-badge-yellow {
+  background-color: #fffac8; /* Equivalent to Tailwind's bg-yellow-100 */
+  color: #92400e; /* Equivalent to Tailwind's text-yellow-800 */
+}
+
+.status-badge-blue {
+  background-color: #dbeafe; /* Equivalent to Tailwind's bg-blue-100 */
+  color: #1e40af; /* Equivalent to Tailwind's text-blue-800 */
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Equivalent to Tailwind's space-x-2 */
+}
+
+.action-button {
+  padding: 4px; /* Equivalent to Tailwind's p-1 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px; /* Equivalent to Tailwind's rounded */
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: #f3f4f6; /* Equivalent to Tailwind's hover:bg-gray-100 */
+}
+
+.action-button-icon {
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+  font-size: 18px; /* Adjusted for icon size */
+}
+
+/* Under Development Section */
+.under-development-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 256px; /* Equivalent to Tailwind's h-64 */
+}
+
+.under-development-content {
+  text-align: center;
+}
+
+.under-development-icon {
+  font-size: 96px; /* Equivalent to Tailwind's text-6xl */
+  color: #9ca3af; /* Equivalent to Tailwind's text-gray-400 */
+  margin-bottom: 16px; /* Equivalent to Tailwind's mb-4 */
+}
+
+.under-development-title {
+  font-size: 18px; /* Equivalent to Tailwind's text-lg */
+  font-weight: 500; /* Equivalent to Tailwind's font-medium */
+  color: #111827; /* Equivalent to Tailwind's text-gray-900 */
+  margin-bottom: 8px; /* Equivalent to Tailwind's mb-2 */
+}
+
+.under-development-message {
+  color: #4b5563; /* Equivalent to Tailwind's text-gray-600 */
+}
+
+/* --- Gemini API Feature: Modal Styles --- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%; /* Responsive width */
+  max-width: 600px; /* Max width for larger screens */
+  max-height: 80vh; /* Max height to prevent overflow on small screens */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Important for inner scrolling content */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a202c; /* Dark text color */
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #718096; /* Gray color for the 'X' */
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.modal-close-button:hover {
+  background-color: #f0f0f0;
+}
+
+.modal-body {
+  flex-grow: 1; /* Allows content to take available space */
+  overflow-y: auto; /* Enables scrolling for long content */
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: #4a5568; /* Body text color */
+}
+
+.llm-response-text {
+    white-space: pre-wrap; /* Preserves whitespace and wraps text */
+    font-size: 15px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.modal-close-button-bottom {
+    background-color: #2563eb; /* Blue button */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.modal-close-button-bottom:hover {
+    background-color: #1d4ed8; /* Darker blue on hover */
+}
+
+/* --- Loading Spinner Styles --- */
+.loading-spinner {
+  border: 4px solid #f3f3f3; /* Light gray border */
+  border-top: 4px solid #3498db; /* Blue top border for animation */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite; /* Spin animation */
+  margin: 50px auto; /* Center the spinner */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

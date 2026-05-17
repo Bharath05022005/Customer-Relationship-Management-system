@@ -1,0 +1,917 @@
+/* General Body and HTML Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f6; /* Light background for the whole page */
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Overall Dashboard Container */
+.salesman-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scroll due to sidebar collapse */
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50; /* Dark blue-grey */
+  color: #ecf0f1; /* Light text */
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: relative; /* For the toggle button */
+  transition: width 0.3s ease;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+}
+
+.sidebar-collapsed .sidebar {
+  width: 70px; /* Collapsed width */
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid #3b506b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #fff;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-collapsed .sidebar-title {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.sidebar-toggle:hover {
+  background-color: #3b506b;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 1.1em;
+  white-space: nowrap; /* Prevent text wrap */
+  overflow: hidden; /* Hide overflow when collapsed */
+  text-overflow: ellipsis; /* Add ellipsis when collapsed */
+}
+
+.sidebar-nav li .icon {
+  margin-right: 15px;
+  font-size: 1.2em;
+  width: 20px; /* Fixed width for icons to prevent shift */
+  text-align: center;
+}
+
+.sidebar-collapsed .sidebar-nav li .icon {
+  margin-right: 0; /* Remove margin when collapsed */
+}
+
+.sidebar-nav li:hover {
+  background-color: #3b506b;
+}
+
+.sidebar-nav li.active {
+  background-color: #007bff; /* Primary blue */
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Main Content Area */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f7f6;
+}
+
+/* Header Styling */
+.header {
+  background-color: #fff;
+  padding: 20px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+}
+
+.header-left .header-page-title {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.quick-search-input {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  width: 200px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.quick-search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.header-search .search-button {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin-left: -35px; /* Overlay on the input */
+  padding: 5px;
+  color: #555;
+}
+
+.header-search .search-button:hover {
+  color: #333;
+}
+
+.header-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.header-user-name {
+  margin: 0;
+  font-weight: bold;
+  color: #333;
+}
+
+.header-user-role {
+  margin: 0;
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Main Content Area Styling */
+.main-content-area {
+  padding: 30px;
+  flex-grow: 1;
+}
+
+/* Loading and Error States */
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 50px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px auto;
+  text-align: center;
+  width: 80%;
+  max-width: 600px;
+}
+
+.welcome-message {
+  text-align: center;
+  font-size: 1.5em;
+  color: #666;
+  margin-top: 100px;
+}
+
+/* Dashboard Specific Styles */
+.dashboard-content {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-content h2 {
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 2em;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.metric-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card h3 {
+  margin-top: 0;
+  color: #007bff;
+  font-size: 1.1em;
+}
+
+.metric-card p {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #333;
+  margin: 10px 0 0;
+}
+
+.recent-activities-card {
+  grid-column: 1 / -1; /* Spans all columns */
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.recent-activities-card h3 {
+  margin-top: 0;
+  color: #007bff;
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+
+.recent-activities-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-activities-card li {
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+  font-size: 0.95em;
+  color: #555;
+}
+
+.recent-activities-card li:last-child {
+  border-bottom: none;
+}
+
+.activity-time {
+  font-size: 0.85em;
+  color: #999;
+  float: right;
+}
+
+/* Common Content Area Styling (Leads, Contacts, Tasks, Logs) */
+.leads-content,
+.contacts-deals-content,
+.tasks-content,
+.communication-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.leads-content h2,
+.contacts-deals-content h2,
+.tasks-content h2,
+.communication-content h2 {
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 2em;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.lead-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
+}
+
+.search-input {
+  flex-grow: 1; /* Allows search input to take more space */
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  min-width: 180px; /* Ensure it doesn't get too small */
+}
+
+.filter-button,
+.export-button,
+.add-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.filter-button {
+  background-color: #6c757d; /* Grey */
+  color: #fff;
+}
+
+.filter-button:hover {
+  background-color: #5a6268;
+}
+
+.export-button {
+  background-color: #28a745; /* Green */
+  color: #fff;
+}
+
+.export-button:hover {
+  background-color: #218838;
+}
+
+.add-button {
+  background-color: #007bff; /* Primary Blue */
+  color: #fff;
+  white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.add-button-icon {
+  font-size: 1.2em;
+  line-height: 1; /* Align icon better */
+}
+
+/* Table Styling */
+.table-responsive {
+  overflow-x: auto; /* Enables horizontal scrolling for tables on small screens */
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse; /* Removes space between borders */
+  margin-top: 15px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee; /* Light line between rows */
+  text-align: left; /* Default alignment for text in cells */
+  white-space: nowrap; /* Prevent content from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add "..." if content is too long */
+}
+
+.data-table th {
+  background-color: #f8f8f8; /* Light grey background for headers */
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+/* Specific Alignment for Table Headers */
+/* Leads Table Headers */
+.leads-content .data-table th:nth-child(1), /* ID */
+.leads-content .data-table th:nth-child(2), /* Name */
+.leads-content .data-table th:nth-child(3), /* Email */
+.leads-content .data-table th:nth-child(4) { /* Company */
+  text-align: left;
+}
+.leads-content .data-table th:nth-child(5), /* Status */
+.leads-content .data-table th:nth-child(6), /* Value */
+.leads-content .data-table th:nth-child(7), /* Last Contact */
+.leads-content .data-table th:nth-child(8) { /* Actions */
+  text-align: right;
+}
+
+/* Contacts & Deals Table Headers */
+.contacts-deals-content .data-table th:nth-child(1), /* ID */
+.contacts-deals-content .data-table th:nth-child(2), /* Contact Name */
+.contacts-deals-content .data-table th:nth-child(3), /* Email */
+.contacts-deals-content .data-table th:nth-child(4) { /* Company */
+  text-align: left;
+}
+.contacts-deals-content .data-table th:nth-child(5), /* Deal Value */
+.contacts-deals-content .data-table th:nth-child(6), /* Deal Stage */
+.contacts-deals-content .data-table th:nth-child(7) { /* Actions */
+  text-align: right;
+}
+
+/* Follow-ups & Tasks Table Headers */
+.tasks-content .data-table th:nth-child(1), /* ID */
+.tasks-content .data-table th:nth-child(2) { /* Description */
+  text-align: left;
+}
+.tasks-content .data-table th:nth-child(3), /* Due Date */
+.tasks-content .data-table th:nth-child(4), /* Priority */
+.tasks-content .data-table th:nth-child(5), /* Status */
+.tasks-content .data-table th:nth-child(6) { /* Actions */
+  text-align: right;
+}
+
+/* Communication Logs Table Headers */
+.communication-content .data-table th:nth-child(1), /* ID */
+.communication-content .data-table th:nth-child(2), /* Type */
+.communication-content .data-table th:nth-child(3), /* Subject */
+.communication-content .data-table th:nth-child(4) { /* Related To */
+  text-align: left;
+}
+.communication-content .data-table th:nth-child(5), /* Date/Time */
+.communication-content .data-table th:nth-child(6) { /* Actions */
+  text-align: right;
+}
+
+
+/* Specific Alignment for Table Data Cells (td) */
+/* Leads Table Cells */
+.leads-content .data-table td:nth-child(1), /* ID */
+.leads-content .data-table td:nth-child(2), /* Name */
+.leads-content .data-table td:nth-child(3), /* Email */
+.leads-content .data-table td:nth-child(4) { /* Company */
+  text-align: left;
+}
+.leads-content .data-table td:nth-child(5), /* Status */
+.leads-content .data-table td:nth-child(6), /* Value */
+.leads-content .data-table td:nth-child(7), /* Last Contact */
+.leads-content .data-table td:nth-child(8) { /* Actions */
+  text-align: right;
+}
+
+/* Contacts & Deals Table Cells */
+.contacts-deals-content .data-table td:nth-child(1), /* ID */
+.contacts-deals-content .data-table td:nth-child(2), /* Contact Name */
+.contacts-deals-content .data-table td:nth-child(3), /* Email */
+.contacts-deals-content .data-table td:nth-child(4) { /* Company */
+  text-align: left;
+}
+.contacts-deals-content .data-table td:nth-child(5), /* Deal Value */
+.contacts-deals-content .data-table td:nth-child(6), /* Deal Stage */
+.contacts-deals-content .data-table td:nth-child(7) { /* Actions */
+  text-align: right;
+}
+
+/* Follow-ups & Tasks Table Cells */
+.tasks-content .data-table td:nth-child(1), /* ID */
+.tasks-content .data-table td:nth-child(2) { /* Description */
+  text-align: left;
+}
+.tasks-content .data-table td:nth-child(3), /* Due Date */
+.tasks-content .data-table td:nth-child(4), /* Priority */
+.tasks-content .data-table td:nth-child(5), /* Status */
+.tasks-content .data-table td:nth-child(6) { /* Actions */
+  text-align: right;
+}
+
+/* Communication Logs Table Cells */
+.communication-content .data-table td:nth-child(1), /* ID */
+.communication-content .data-table td:nth-child(2), /* Type */
+.communication-content .data-table td:nth-child(3), /* Subject */
+.communication-content .data-table td:nth-child(4) { /* Related To */
+  text-align: left;
+}
+.communication-content .data-table td:nth-child(5), /* Date/Time */
+.communication-content .data-table td:nth-child(6) { /* Actions */
+  text-align: right;
+}
+
+
+.data-table tbody tr:hover {
+  background-color: #f5f5f5; /* Hover effect for rows */
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none; /* No border for the last row */
+}
+
+/* Action Buttons within tables */
+.action-button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  margin-left: 5px; /* Spacing between buttons */
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.action-button:first-child {
+  margin-left: 0;
+}
+
+.view-button {
+  background-color: #007bff;
+  color: white;
+}
+.view-button:hover {
+  background-color: #0056b3;
+}
+
+.edit-button {
+  background-color: #ffc107;
+  color: #333;
+}
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.nurture-button {
+  background-color: #6f42c1; /* Purple */
+  color: white;
+}
+.nurture-button:hover {
+  background-color: #59359e;
+}
+
+.complete-button {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+.complete-button:hover {
+  background-color: #218838;
+}
+
+/* Status and Priority Badges */
+.status-badge, .priority-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: capitalize;
+  min-width: 60px; /* Ensure consistent width for badges */
+  text-align: center;
+}
+
+/* Status Badges */
+.status-badge.new { background-color: #e0f7fa; color: #00bcd4; } /* Cyan */
+.status-badge.in-progress { background-color: #fff3cd; color: #ffc107; } /* Yellow */
+.status-badge.converted { background-color: #d4edda; color: #28a745; } /* Green */
+.status-badge.lost { background-color: #f8d7da; color: #dc3545; } /* Red */
+.status-badge.pending { background-color: #e2e3e5; color: #6c757d; } /* Grey */
+.status-badge.won { background-color: #d1ecf1; color: #17a2b8; } /* Teal */
+.status-badge.negotiation { background-color: #d6eaff; color: #007bff; } /* Blue */
+.status-badge.follow-up { background-color: #f7e0fa; color: #8a2be2; } /* Purple */
+.status-badge.qualification { background-color: #e0ebf7; color: #3498db; } /* Lighter blue */
+.status-badge.closed-won { background-color: #d4edda; color: #28a745; } /* Green */
+.status-badge.closed-lost { background-color: #f8d7da; color: #dc3545; } /* Red */
+
+
+/* Priority Badges (for tasks) */
+.priority-badge.high { background-color: #f8d7da; color: #dc3545; } /* Red */
+.priority-badge.medium { background-color: #fff3cd; color: #ffc107; } /* Yellow */
+.priority-badge.low { background-color: #d4edda; color: #28a745; } /* Green */
+
+
+/* Modal Styles (for LLM Insight, Add Contact, Add Lead) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Above everything else */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh; /* Limit height for scrollable content */
+  overflow-y: auto; /* Enable scrolling if content is too long */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #777;
+  transition: color 0.2s;
+}
+
+.modal-close-button:hover {
+  color: #333;
+}
+
+.modal-body {
+  flex-grow: 1; /* Allows body to take available space */
+  margin-bottom: 20px;
+}
+
+.llm-response-text {
+  font-size: 1.1em;
+  line-height: 1.8;
+  color: #555;
+}
+
+.modal-footer {
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  text-align: right;
+}
+
+.modal-close-button-bottom {
+  background-color: #6c757d; /* Grey */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.modal-close-button-bottom:hover {
+  background-color: #5a6268;
+}
+
+/* Styles for Add Contact/Deal and Add Lead Forms (within modal) */
+.add-form-group {
+  margin-bottom: 15px;
+}
+
+.add-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.add-form-group input[type="text"],
+.add-form-group input[type="email"],
+.add-form-group input[type="number"],
+.add-form-group select,
+.add-form-group textarea {
+  width: calc(100% - 22px); /* Account for padding and border */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.add-form-group textarea {
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 80px;
+}
+
+.add-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.add-form-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.add-form-actions .cancel-button {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.add-form-actions .cancel-button:hover {
+  background-color: #5a6268;
+}
+
+.add-form-actions .submit-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.add-form-actions .submit-button:hover {
+  background-color: #0056b3;
+}
+
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px; /* Always collapsed on smaller screens */
+  }
+  .sidebar-nav li span:not(.icon) {
+    display: none; /* Hide text, only show icons */
+  }
+  .sidebar-title {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+  }
+  .sidebar-header {
+    justify-content: center; /* Center the toggle button */
+  }
+
+  .header-page-title {
+    font-size: 1.5em;
+  }
+
+  .header-right {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .quick-search-input {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .salesman-dashboard-container {
+    flex-direction: column; /* Stack sidebar and main content vertically */
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row; /* Make sidebar horizontal */
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .sidebar-header {
+    display: none; /* Hide header in horizontal sidebar */
+  }
+
+  .sidebar-nav ul {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .sidebar-nav li {
+    padding: 10px 15px;
+    flex-direction: column; /* Stack icon and text */
+    font-size: 0.9em;
+    text-align: center;
+  }
+
+  .sidebar-nav li .icon {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+
+  .main-content {
+    margin-top: 0; /* Remove top margin */
+  }
+
+  .header {
+    padding: 15px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .header-left, .header-right {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .main-content-area {
+    padding: 15px;
+  }
+
+  .dashboard-metrics {
+    grid-template-columns: 1fr; /* Single column on small screens */
+  }
+
+  .lead-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lead-controls input,
+  .lead-controls button {
+    width: 100%;
+    margin-bottom: 10px; /* Add space between stacked buttons */
+  }
+
+  /* Ensures horizontal scroll for tables if content overflows */
+
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .modal-title {
+    font-size: 1.5em;
+  }
+}
