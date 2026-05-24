@@ -1,31 +1,29 @@
 services:
-  # Backend Service (Node.js)
+  # Backend Node.js API Service
   - type: web
-    name: crm-backend
+    name: custora-api
     env: node
     rootDir: backend
-    buildCommand: npm install
-    startCommand: node server.js
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
       - key: PORT
         value: 5000
-      - key: DB_SERVER
-        sync: false # You will set this in the Render Dashboard
-      - key: DB_DATABASE
-        sync: false
-      - key: DB_USER
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
+      - key: JWT_SECRET
+        generateValue: true # Render will auto-generate a secure random string
+      - key: DATABASE_URL
+        sync: false # You must add your SQL Server connection string manually in the Render dashboard
 
-  # Frontend Service (Static Site)
+  # Frontend React Static Site
   - type: web
-    name: crm-frontend
+    name: custora-app
     env: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishDir: build
-    routes:
-      - type: rewrite
-        src: /*
-        dest: /index.html
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: custora-api
+          envVarKey: RENDER_EXTERNAL_URL
