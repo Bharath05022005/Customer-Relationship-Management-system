@@ -78,11 +78,11 @@ export const AdminDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [usersRes, leadsRes, tasksRes, dealsRes, contactsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/auth/users',  { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/leads',       { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/tasks',       { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/deals',       { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/contacts',    { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('https://custora-api-dsn4.onrender.com/api/auth/users',  { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('https://custora-api-dsn4.onrender.com/api/leads',       { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('https://custora-api-dsn4.onrender.com/api/tasks',       { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('https://custora-api-dsn4.onrender.com/api/deals',       { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('https://custora-api-dsn4.onrender.com/api/contacts',    { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       if (usersRes.ok) setUsers(await usersRes.json());
@@ -169,7 +169,7 @@ export const AdminDashboard: React.FC = () => {
     e.preventDefault();
     setLoading(true); setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch('https://custora-api-dsn4.onrender.com/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, email, password }),
@@ -187,7 +187,7 @@ export const AdminDashboard: React.FC = () => {
   const assignTask = async (taskId: number, salesmanEmail: string) => {
     if (!salesmanEmail) return;
     try {
-      await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      await fetch(`https://custora-api-dsn4.onrender.com/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ assignedTo: salesmanEmail }),
@@ -547,7 +547,7 @@ export const AdminDashboard: React.FC = () => {
             if (!title || !salesman) return;
             
             try {
-              await fetch('http://localhost:5000/api/tasks', {
+              await fetch('https://custora-api-dsn4.onrender.com/api/tasks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ title, type, assignedTo: salesman, dueDate: dueDate ? new Date(dueDate).toISOString() : new Date().toISOString() })

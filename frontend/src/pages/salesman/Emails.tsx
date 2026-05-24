@@ -28,7 +28,7 @@ export const Emails: React.FC = () => {
     e.preventDefault();
     setStatus({ type: 'sending' });
     try {
-      const res = await fetch('http://localhost:5000/api/email/send', {
+      const res = await fetch('https://custora-api-dsn4.onrender.com/api/email/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ to, subject, text: message }),

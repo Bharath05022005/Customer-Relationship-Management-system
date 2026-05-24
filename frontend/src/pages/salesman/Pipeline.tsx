@@ -76,7 +76,7 @@ export const Pipeline: React.FC = () => {
 
   const fetchDeals = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/deals', {
+      const res = await fetch('https://custora-api-dsn4.onrender.com/api/deals', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -99,7 +99,7 @@ export const Pipeline: React.FC = () => {
   const handleAddDeal = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/deals', {
+      const res = await fetch('https://custora-api-dsn4.onrender.com/api/deals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export const Pipeline: React.FC = () => {
 
   const updateStage = async (id: number, newStage: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/deals/${id}`, {
+      const res = await fetch(`https://custora-api-dsn4.onrender.com/api/deals/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
