@@ -14,9 +14,9 @@ export const SalesmanDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [leadsRes, tasksRes, dealsRes] = await Promise.all([
-        fetch('https://custora-api-dsn4.onrender.com/api/leads', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('https://custora-api-dsn4.onrender.com/api/tasks', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('https://custora-api-dsn4.onrender.com/api/deals', { headers: { Authorization: `Bearer ${token}` } })
+        fetch('http://localhost:5000/api/leads', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('http://localhost:5000/api/tasks', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('http://localhost:5000/api/deals', { headers: { Authorization: `Bearer ${token}` } })
       ]);
 
       if (leadsRes.ok) {
@@ -152,3 +152,4 @@ export const SalesmanDashboard: React.FC = () => {
     </div>
   );
 };
+

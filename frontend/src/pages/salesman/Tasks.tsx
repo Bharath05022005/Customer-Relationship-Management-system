@@ -77,7 +77,7 @@ export const Tasks: React.FC = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/tasks', {
+      const res = await fetch('http://localhost:5000/api/tasks', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -91,7 +91,7 @@ export const Tasks: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/auth/users', {
+      const res = await fetch('http://localhost:5000/api/auth/users', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -119,7 +119,7 @@ export const Tasks: React.FC = () => {
         dueDate,
         assignedTo: isAdmin ? assignedTo : undefined,
       };
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/tasks', {
+      const res = await fetch('http://localhost:5000/api/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export const Tasks: React.FC = () => {
 
   const updateStatus = async (id: number, newStatus: string) => {
     try {
-      const res = await fetch(`https://custora-api-dsn4.onrender.com/api/tasks/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -586,3 +586,4 @@ export const Tasks: React.FC = () => {
     </div>
   );
 };
+

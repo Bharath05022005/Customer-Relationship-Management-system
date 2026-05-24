@@ -69,7 +69,7 @@ export const ActivityLog: React.FC = () => {
 
   const fetchActivities = async () => {
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/activity', {
+      const res = await fetch('http://localhost:5000/api/activity', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -240,3 +240,4 @@ export const ActivityLog: React.FC = () => {
     </div>
   );
 };
+

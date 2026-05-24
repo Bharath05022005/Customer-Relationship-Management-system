@@ -41,7 +41,7 @@ export const Segments: React.FC = () => {
 
   const fetchSegments = async () => {
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/segments', {
+      const res = await fetch('http://localhost:5000/api/segments', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -57,7 +57,7 @@ export const Segments: React.FC = () => {
   const handleAddSegment = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/segments', {
+      const res = await fetch('http://localhost:5000/api/segments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, region, industry, interest, dealSize }),
@@ -267,3 +267,4 @@ export const Segments: React.FC = () => {
     </div>
   );
 };
+

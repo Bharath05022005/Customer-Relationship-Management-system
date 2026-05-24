@@ -47,7 +47,7 @@ export const Proposals: React.FC = () => {
 
   const fetchProposals = async () => {
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/proposals', {
+      const res = await fetch('http://localhost:5000/api/proposals', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -63,7 +63,7 @@ export const Proposals: React.FC = () => {
   const handleCreateProposal = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/proposals', {
+      const res = await fetch('http://localhost:5000/api/proposals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ clientName, email, item, price: parseFloat(price), quantity: parseInt(quantity) }),
@@ -273,3 +273,4 @@ export const Proposals: React.FC = () => {
     </div>
   );
 };
+

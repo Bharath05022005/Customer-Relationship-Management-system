@@ -84,7 +84,7 @@ export const Contacts: React.FC = () => {
 
   const fetchContacts = async () => {
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/contacts', {
+      const res = await fetch('http://localhost:5000/api/contacts', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -107,7 +107,7 @@ export const Contacts: React.FC = () => {
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://custora-api-dsn4.onrender.com/api/contacts', {
+      const res = await fetch('http://localhost:5000/api/contacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, title, email, secondaryEmail, phone, mobile, company, department, website, leadSource, assignedTo, notes }),
@@ -463,3 +463,4 @@ export const Contacts: React.FC = () => {
     </div>
   );
 };
+
