@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { LogOut } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -17,13 +21,32 @@ export const Header: React.FC = () => {
   return (
     <header className="header glass" style={{ 
       display: 'flex', 
-      justifyContent: 'flex-end', 
+      justifyContent: 'space-between', 
       alignItems: 'center',
       padding: '0 24px',
       minHeight: '64px',
       borderBottom: '1px solid rgba(255,255,255,0.05)',
       zIndex: 50
     }}>
+      
+      {/* Mobile Menu Button (Hamburger) */}
+      <button 
+        onClick={onMenuClick}
+        className="mobile-menu-btn"
+        style={{
+          display: 'none', // Hidden on desktop, shown via CSS on mobile
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '8px',
+          color: 'var(--text-primary)',
+          cursor: 'pointer',
+          borderRadius: '8px',
+          background: 'rgba(255,255,255,0.05)',
+          border: 'none'
+        }}
+      >
+        <Menu size={22} />
+      </button>
       
       {/* Right Actions */}
       <div style={{ display: 'flex', alignItems: 'center' }}>

@@ -175,11 +175,17 @@ input[type="datetime-local"] {
 }
 
 /* ══════════════════════════════════════════════════
-   MOBILE RESPONSIVENESS (Responsive Overrides)
+   MOBILE RESPONSIVENESS & PREMIUM LAYOUT OVERRIDES
    ══════════════════════════════════════════════════ */
 
+/* Hide mobile-only buttons on desktop */
+.mobile-menu-btn,
+.mobile-close-btn {
+  display: none !important;
+}
+
 @media (max-width: 1024px) {
-  /* Tablet adjustments */
+  /* Tablet adjustments for dashboards */
   .page-container > div[style*="grid-template-columns: repeat(6, 1fr)"],
   .page-container > div[style*="grid-template-columns:repeat(6, 1fr)"] {
     grid-template-columns: repeat(3, 1fr) !important;
@@ -196,79 +202,91 @@ input[type="datetime-local"] {
 }
 
 @media (max-width: 768px) {
-  /* Mobile layout */
-  .app-container {
-    flex-direction: column !important;
-  }
-  
+  /* Premium mobile sidebar drawer */
   .sidebar {
-    width: 100% !important;
-    height: auto !important;
-    padding: 16px 16px 8px 16px !important;
-    border-right: none !important;
-    border-bottom: 1px solid var(--glass-border);
+    position: fixed !important;
+    top: 0 !important;
+    left: -280px !important; /* Hidden offscreen */
+    width: 280px !important;
+    height: 100vh !important;
+    background-color: #0f172a !important; /* Dark solid drawer bg */
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: none !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1000 !important;
   }
   
-  .sidebar nav {
-    display: flex;
-    flex-direction: row !important;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    gap: 8px;
-    /* Hide scrollbar for a cleaner look but keep it scrollable */
-    -ms-overflow-style: none;  
-    scrollbar-width: none;  
+  .mobile-sidebar-open .sidebar {
+    transform: translateX(280px) !important;
   }
   
-  .sidebar nav::-webkit-scrollbar {
-    display: none;
+  /* Show close button in drawer header on mobile */
+  .mobile-close-btn {
+    display: flex !important;
   }
   
-  .sidebar nav .nav-link {
-    flex-shrink: 0;
-    white-space: nowrap;
-    padding: 10px 14px;
-  }
-  
-  .sidebar-logo {
-    margin-bottom: 16px !important;
-  }
-  
-  .sidebar-footer {
-    display: none !important; /* Header already has Profile & Logout */
+  /* Show hamburger menu in header on mobile */
+  .mobile-menu-btn {
+    display: flex !important;
   }
   
   .header {
-    justify-content: center !important;
-    padding: 12px !important;
+    padding: 0 16px !important;
   }
   
   .page-container {
     padding: 16px !important;
   }
   
-  /* Force all remaining grid columns to stack on mobile */
+  /* Force dashboard/grids to stack to 1 column on mobile */
   .page-container > div[style*="grid-template-columns"] {
     grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
   
-  /* Make KPI cards and charts responsive */
+  /* Stack form/modal input grids to 1 column */
+  .glass-panel form div[style*="display: grid"],
+  .glass-panel form div[style*="display:grid"],
+  form div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  /* Responsive modal containers width */
+  .glass-panel[style*="width: 860px"],
+  .glass-panel[style*="width: 820px"],
+  .glass-panel[style*="width: 700px"],
+  .glass-panel[style*="width: 640px"] {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    padding: 20px 16px !important;
+  }
+  
+  /* Make table containers horizontally scrollable */
+  .glass-panel[style*="overflow: hidden"],
+  .glass-panel[style*="overflow:hidden"] {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  
+  /* Force tables to remain readable with scrollbar */
+  table {
+    min-width: 680px !important;
+  }
+  
+  /* Titles font size overrides */
   h1 {
     font-size: 22px !important;
   }
   h2 {
-    font-size: 20px !important;
+    font-size: 18px !important;
   }
-  
-  .glass-panel,
-  .page-container > div > div {
-    padding: 16px !important;
-  }
-  
-  /* Profile dropdown adjustments */
-  header .header-actions,
-  header > div {
-    width: 100%;
-    justify-content: flex-end;
+}
+
+@media (max-width: 480px) {
+  /* Smaller screens / phones */
+  .page-container > div[style*="grid-template-columns: repeat(6, 1fr)"],
+  .page-container > div[style*="grid-template-columns:repeat(6, 1fr)"] {
+    grid-template-columns: 1fr !important;
   }
 }

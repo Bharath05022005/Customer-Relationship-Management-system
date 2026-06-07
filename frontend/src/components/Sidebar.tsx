@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, UserSquare2, LineChart, CheckSquare, ShieldAlert, LogOut, Clock, Filter, FileText, Mail } from 'lucide-react';
+import { LayoutDashboard, Users, UserSquare2, LineChart, CheckSquare, ShieldAlert, LogOut, Clock, Filter, FileText, Mail, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
 
@@ -21,11 +21,17 @@ const salesmanNavItems = [
   { name: 'Emails', path: '/salesman/emails', icon: <Mail size={20} /> },
 ];
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => {
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    onClose?.();
     logout();
     navigate('/login');
   };
@@ -33,21 +39,58 @@ export const Sidebar: React.FC = () => {
   const navItems = isAdmin ? adminNavItems : salesmanNavItems;
 
   return (
-    <aside className="sidebar glass">
-      <div className="sidebar-header">
-        <div className="logo-container" style={{ alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
-          <img src="/logo-full.svg" alt="CRM Logo" style={{ height: '48px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
-        </div>
-      </div>
+    <>
+      {/* Mobile backdrop overlay */}
+      {isOpen && (
+        <div 
+          className="sidebar-backdrop" 
+          onClick={onClose}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            zIndex: 999
+          }}
+        />
+      )}
       
-      <nav className="sidebar-nav">
-        {navItems.map((item) => (
-          <NavLink 
-            key={item.name} 
-            to={item.path}
-            end={item.path === '/admin' || item.path === '/salesman'}
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+      <aside className={`sidebar glass ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <div className="logo-container" style={{ alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
+            <img src="/logo-full.svg" alt="CRM Logo" style={{ height: '48px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
+          </div>
+          <button 
+            onClick={onClose}
+            className="mobile-close-btn"
+            style={{
+              padding: '6px',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              borderRadius: '8px',
+              background: 'rgba(255,255,255,0.05)',
+              border: 'none',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
+            <X size={20} />
+          </button>
+        </div>
+        
+        <nav className="sidebar-nav">
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name} 
+              to={item.path}
+              end={item.path === '/admin' || item.path === '/salesman'}
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={onClose}
+            >
             {item.icon}
             <span>{item.name}</span>
           </NavLink>
@@ -68,5 +111,6 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
     </aside>
-  );
+  </>
+);
 };
