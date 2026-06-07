@@ -35,8 +35,8 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar glass">
       <div className="sidebar-header">
-        <div className="logo-container" style={{ alignItems: 'center', justifyContent: 'flex-start', padding: '10px 0', gap: '10px' }}>
-          <img src="/logo-full.svg" alt="CRM Logo" style={{ height: '45px', width: 'auto' }} />
+        <div className="logo-container" style={{ alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
+          <img src="/logo-full.svg" alt="CRM Logo" style={{ height: '48px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
         </div>
       </div>
       
