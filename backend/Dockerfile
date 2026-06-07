@@ -12,11 +12,11 @@ RUN npm install
 # Copy application source code
 COPY . .
 
-# Build the project (generates Prisma client and compiles TypeScript)
-RUN npm run build
+# Generate Prisma client
+RUN npx prisma generate
 
 # Expose the port the backend runs on
 EXPOSE 5000
 
-# Start the application and sync database schema
-CMD npx prisma db push && npm start
+# Start: sync DB schema then start the Node.js server
+CMD ["sh", "-c", "npx prisma db push && npm start"]
