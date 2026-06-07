@@ -35,19 +35,8 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar glass">
       <div className="sidebar-header">
-        <div className="logo-container" style={{ alignItems: 'center' }}>
-          <div className="logo-icon">C</div>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h2 style={{ lineHeight: '1', margin: '0', paddingBottom: '4px' }}>CUSTORA</h2>
-            <span style={{ 
-              fontSize: '10px', 
-              color: 'var(--text-secondary)', 
-              fontWeight: 500, 
-              lineHeight: '1.1'
-            }}>
-              Customer Relationship Management
-            </span>
-          </div>
+        <div className="logo-container" style={{ alignItems: 'center', justifyContent: 'flex-start', padding: '10px 0', gap: '10px' }}>
+          <img src="/logo-full.svg" alt="CRM Logo" style={{ height: '45px', width: 'auto' }} />
         </div>
       </div>
       

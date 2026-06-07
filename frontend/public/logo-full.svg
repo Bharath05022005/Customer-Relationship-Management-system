@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" fill="none">
+  <!-- C Logo -->
+  <g transform="translate(10, 0)">
+    <polygon points="30,15 90,25 60,55 10,60" fill="#00E5FF" />
+    <polygon points="10,60 60,55 60,85" fill="#004D40" />
+    <polygon points="10,60 60,85 90,115 30,105" fill="#00BFA5" />
+  </g>
+
+  <!-- CRM Text -->
+  <!-- Skewing the text to match the aggressive italic angle of the reference -->
+  <text x="145" y="85" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="70" fill="#00E5FF" letter-spacing="2" transform="skewX(-15)">CRM</text>
+</svg>
