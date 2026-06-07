@@ -15,8 +15,11 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
+# Make the wait script executable
+RUN chmod +x wait-and-start.sh
+
 # Expose the port the backend runs on
 EXPOSE 5000
 
-# Start: sync DB schema then start the Node.js server
-CMD ["sh", "-c", "npx prisma db push && npm start"]
+# Wait for SQL Server, push schema, seed DB, then start
+CMD ["sh", "wait-and-start.sh"]
