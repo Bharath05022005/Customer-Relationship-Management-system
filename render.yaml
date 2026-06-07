@@ -36,9 +36,7 @@ services:
     plan: free
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: crm-backend
-          property: url
+        sync: false # You will enter your backend's public URL (e.g. https://crm-backend.onrender.com) during deployment
 
 # 3. Database Service (PostgreSQL)
 databases:
