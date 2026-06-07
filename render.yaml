@@ -27,11 +27,13 @@ services:
         sync: false # You will be prompted to enter this during deployment
 
   # 2. Frontend Service (Static Site)
-  - type: static
+  - type: web
     name: crm-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm run build
     staticPublishPath: dist
+    plan: free
     envVars:
       - key: VITE_API_URL
         fromService:
