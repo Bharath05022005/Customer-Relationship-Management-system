@@ -3,49 +3,49 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model ActivityLog {
-  id          Int       @id(map: "PK__Activity__3213E83F9FFA7A11") @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   type        String    @db.VarChar(50)
   subject     String    @db.VarChar(255)
   description String    @db.Text
   relatedTo   String?   @db.VarChar(100)
-  dateTime    DateTime? @default(now(), map: "DF__ActivityL__dateT__6477ECF3") @db.DateTime
+  dateTime    DateTime? @default(now())
 }
 
 model Approvals {
-  ApprovalId  Int       @id(map: "PK__Approval__328477F408A98EC6") @default(autoincrement())
+  ApprovalId  Int       @id @default(autoincrement())
   RequestType String    @db.VarChar(50)
   ReferenceId String    @db.VarChar(50)
   SubmittedBy Int
-  Status      String    @default("Pending", map: "DF__Approvals__Statu__6754599E") @db.VarChar(20)
+  Status      String    @default("Pending") @db.VarChar(20)
   Remarks     String?   @db.VarChar(255)
-  SubmittedAt DateTime? @default(now(), map: "DF__Approvals__Submi__68487DD7") @db.DateTime
-  UpdatedAt   DateTime? @db.DateTime
+  SubmittedAt DateTime? @default(now())
+  UpdatedAt   DateTime?
 }
 
 model Contacts {
-  id             Int       @id(map: "PK__Contacts__3213E83F6E86C64D") @default(autoincrement())
-  name           String    @db.NVarChar(255)
-  email          String    @db.NVarChar(255)
-  phone          String?   @db.NVarChar(50)
-  company        String?   @db.NVarChar(255)
-  notes          String?   @db.NVarChar(Max)
-  createdAt      DateTime? @default(now(), map: "DF__Contacts__create__619B8048") @db.DateTime
-  assignedTo     String?   @db.NVarChar(255)
-  title          String?   @db.NVarChar(150)
-  department     String?   @db.NVarChar(150)
-  secondaryEmail String?   @db.NVarChar(255)
-  mobile         String?   @db.NVarChar(50)
-  website        String?   @db.NVarChar(255)
-  leadSource     String?   @db.NVarChar(100)
+  id             Int       @id @default(autoincrement())
+  name           String    @db.VarChar(255)
+  email          String    @db.VarChar(255)
+  phone          String?   @db.VarChar(50)
+  company        String?   @db.VarChar(255)
+  notes          String?   @db.Text
+  createdAt      DateTime? @default(now())
+  assignedTo     String?   @db.VarChar(255)
+  title          String?   @db.VarChar(150)
+  department     String?   @db.VarChar(150)
+  secondaryEmail String?   @db.VarChar(255)
+  mobile         String?   @db.VarChar(50)
+  website        String?   @db.VarChar(255)
+  leadSource     String?   @db.VarChar(100)
 }
 
 model CustomerSegments {
-  id       Int     @id(map: "PK__Customer__3213E83F11B728D7") @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   name     String  @db.VarChar(100)
   region   String? @db.VarChar(100)
   industry String? @db.VarChar(100)
@@ -54,77 +54,77 @@ model CustomerSegments {
 }
 
 model Deals {
-  id                Int       @id(map: "PK__Deals__3213E83F7EDAE686") @default(autoincrement())
-  dealName          String    @db.NVarChar(255)
+  id                Int       @id @default(autoincrement())
+  dealName          String    @db.VarChar(255)
   value             Int
-  stage             String    @db.NVarChar(50)
+  stage             String    @db.VarChar(50)
   expectedCloseDate DateTime? @db.Date
-  contactName       String?   @db.NVarChar(255)
-  company           String?   @db.NVarChar(255)
-  assignedTo        String?   @db.NVarChar(255)
-  probability       Int?      
-  description       String?   @db.NVarChar(Max)
+  contactName       String?   @db.VarChar(255)
+  company           String?   @db.VarChar(255)
+  assignedTo        String?   @db.VarChar(255)
+  probability       Int?
+  description       String?   @db.Text
 }
 
 model FollowUps {
-  id          Int       @id(map: "PK__FollowUp__3213E83F3DE7D22F") @default(autoincrement())
-  title       String    @db.NVarChar(255)
-  type        String    @db.NVarChar(50)
-  description String?   @db.NVarChar(Max)
-  dueDate     DateTime? @db.DateTime
-  assignedTo  String?   @db.NVarChar(100)
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  type        String    @db.VarChar(50)
+  description String?   @db.Text
+  dueDate     DateTime?
+  assignedTo  String?   @db.VarChar(100)
   contactId   Int?
-  status      String?   @default("Pending", map: "DF__FollowUps__statu__6D0D32F4") @db.NVarChar(20)
-  priority    String?   @db.NVarChar(20)
+  status      String?   @default("Pending") @db.VarChar(20)
+  priority    String?   @db.VarChar(20)
 }
 
 model Leads {
-  id             Int       @id(map: "PK__Leads__3213E83FA5DA2468") @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   name           String    @db.VarChar(255)
   email          String    @db.VarChar(255)
   phone          String?   @db.VarChar(50)
   company        String?   @db.VarChar(255)
   status         String    @db.VarChar(50)
   source         String    @db.VarChar(100)
-  assignedTo     String?   @default("unassigned", map: "DF__Leads__assignedT__5CD6CB2B") @db.VarChar(100)
-  lastContact    DateTime? @db.DateTime
-  value          Decimal?  @default(0, map: "DF__Leads__value__5DCAEF64") @db.Decimal(10, 2)
-  createdAt      DateTime? @default(now(), map: "DF__Leads__createdAt__5EBF139D") @db.DateTime
-  title          String?   @db.NVarChar(150)
-  website        String?   @db.NVarChar(255)
-  industry       String?   @db.NVarChar(100)
-  noOfEmployees  String?   @db.NVarChar(50)
-  annualRevenue  String?   @db.NVarChar(100)
-  rating         String?   @db.NVarChar(20)
-  description    String?   @db.NVarChar(Max)
+  assignedTo     String?   @default("unassigned") @db.VarChar(100)
+  lastContact    DateTime?
+  value          Decimal?  @default(0) @db.Decimal(10, 2)
+  createdAt      DateTime? @default(now())
+  title          String?   @db.VarChar(150)
+  website        String?   @db.VarChar(255)
+  industry       String?   @db.VarChar(100)
+  noOfEmployees  String?   @db.VarChar(50)
+  annualRevenue  String?   @db.VarChar(100)
+  rating         String?   @db.VarChar(20)
+  description    String?   @db.Text
 }
 
 model Quotations {
-  id         Int       @id(map: "PK__Quotatio__3213E83F792EAB86") @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   clientName String    @db.VarChar(255)
   email      String    @db.VarChar(255)
   item       String    @db.VarChar(255)
   price      Decimal   @db.Decimal(10, 2)
   quantity   Int
-  createdAt  DateTime? @default(now(), map: "DF__Quotation__creat__6FE99F9F") @db.DateTime
-  assignedTo String?   @db.NVarChar(255)
+  createdAt  DateTime? @default(now())
+  assignedTo String?   @db.VarChar(255)
 }
 
 model Roles {
-  id          Int    @id(map: "PK__Roles__3213E83F7F4532F4") @default(autoincrement())
-  RoleName    String @db.NVarChar(50)
-  Permissions String @db.NVarChar(Max)
+  id          Int    @id @default(autoincrement())
+  RoleName    String @db.VarChar(50)
+  Permissions String @db.Text
 }
 
 model Salesman {
-  id       Int     @id(map: "PK__Salesman__3213E83FB52C46F0") @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   username String  @db.VarChar(100)
-  email    String  @unique(map: "UQ__Salesman__AB6E616413239BFE") @db.VarChar(100)
+  email    String  @unique @db.VarChar(100)
   password String  @db.VarChar(255)
-  Role     String? @default("Salesman", map: "DF__Salesman__Role__778AC167") @db.VarChar(50)
+  Role     String? @default("Salesman") @db.VarChar(50)
 }
 
 model Users {
-  UserId Int    @id(map: "PK__Users__1788CC4CBD6169B7") @default(autoincrement())
+  UserId Int    @id @default(autoincrement())
   Role   String @db.VarChar(50)
 }

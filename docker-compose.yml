@@ -1,24 +1,21 @@
 
 services:
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  postgres:
+    image: postgres:16-alpine
     ports:
-      - "1433:1433"
+      - "5432:5432"
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=bharath@2005
-      - MSSQL_MEMORY_LIMIT_MB=1024
-    deploy:
-      resources:
-        limits:
-          memory: 2g
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=bharath@2005
+      - POSTGRES_DB=CRM_DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P bharath@2005 -Q 'SELECT 1' -No || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      start_period: 30s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d CRM_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -28,7 +25,7 @@ services:
       - "5000:5000"
     environment:
       - PORT=5000
-      - DATABASE_URL=sqlserver://mssql:1433;database=CRM_DB;user=sa;password=bharath@2005;encrypt=false;trustServerCertificate=true
+      - DATABASE_URL=postgresql://postgres:bharath@2005@postgres:5432/CRM_DB?schema=public
       - JWT_SECRET=your_jwt_secret_key
       - MAIL_HOST=smtp.gmail.com
       - EMAIL_PORT=465
@@ -36,7 +33,7 @@ services:
       - EMAIL_USER=bharath0502325@gmail.com
       - EMAIL_PASS=hthkbytmotoeumjc
     depends_on:
-      mssql:
+      postgres:
         condition: service_healthy
     restart: unless-stopped
 
@@ -51,3 +48,7 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  postgres_data:
+

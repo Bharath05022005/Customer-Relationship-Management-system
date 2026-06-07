@@ -1,0 +1,46 @@
+services:
+  # 1. Backend Service (Docker)
+  - type: web
+    name: crm-backend
+    runtime: docker
+    dockerContext: backend
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: crm-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 465
+      - key: EMAIL_SECURE
+        value: true
+      - key: EMAIL_USER
+        sync: false # You will be prompted to enter this during deployment
+      - key: EMAIL_PASS
+        sync: false # You will be prompted to enter this during deployment
+
+  # 2. Frontend Service (Static Site)
+  - type: web
+    name: crm-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm run build
+    publishDir: dist
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: crm-backend
+          property: url
+
+# 3. Database Service (PostgreSQL)
+databases:
+  - name: crm-db
+    plan: free
