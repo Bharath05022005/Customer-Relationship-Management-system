@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getActivityLogs = async (req: Request, res: Response): Promise<void> => {
+export const getActivityLogs = async (req, res) => {
   try {
     const userRole = req.user?.roleName;
     const userEmail = req.user?.roleName === 'Salesman' ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email : null;
@@ -14,7 +15,7 @@ export const getActivityLogs = async (req: Request, res: Response): Promise<void
     } else {
       logs = await prisma.activityLog.findMany({
         where: { relatedTo: userEmail || '' },
-        orderBy: { dateTime: 'desc' },
+        orderBy: { dateTime: 'desc' }
       });
     }
 
@@ -25,7 +26,7 @@ export const getActivityLogs = async (req: Request, res: Response): Promise<void
   }
 };
 
-export const createActivityLog = async (req: Request, res: Response): Promise<void> => {
+export const createActivityLog = async (req, res) => {
   try {
     const { type, subject, description, relatedTo } = req.body;
 
@@ -37,7 +38,7 @@ export const createActivityLog = async (req: Request, res: Response): Promise<vo
         subject,
         description,
         relatedTo: userEmail || 'unassigned',
-        dateTime: new Date(),
+        dateTime: new Date()
       }
     });
 

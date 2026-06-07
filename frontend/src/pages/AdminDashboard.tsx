@@ -4,8 +4,7 @@ import { Users, Briefcase, DollarSign, TrendingUp, CheckSquare, Target } from 'l
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
-  LineChart, Line, Area, AreaChart,
-  RadialBarChart, RadialBar,
+  Area, AreaChart,
 } from 'recharts';
 
 /* ── shared ── */
@@ -207,7 +206,6 @@ export const AdminDashboard: React.FC = () => {
   ];
 
   /* Custom Donut centre label */
-  const renderDonutLabel = ({ cx, cy, name, percent }: any) => null;
 
   return (
     <div className="page-container">

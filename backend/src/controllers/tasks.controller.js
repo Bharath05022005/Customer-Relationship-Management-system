@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getTasks = async (req: Request, res: Response): Promise<void> => {
+export const getTasks = async (req, res) => {
   try {
     const userRole = req.user?.roleName?.toLowerCase();
     const userEmail = userRole === 'salesman' ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email : null;
@@ -14,7 +15,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
     } else {
       tasks = await prisma.followUps.findMany({
         where: { assignedTo: userEmail || '' },
-        orderBy: { dueDate: 'asc' },
+        orderBy: { dueDate: 'asc' }
       });
     }
 
@@ -25,7 +26,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const createTask = async (req: Request, res: Response): Promise<void> => {
+export const createTask = async (req, res) => {
   try {
     const { title, type, description, dueDate, contactId, assignedTo } = req.body;
 
@@ -38,7 +39,7 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
         type: type || 'Call',
         description,
         dueDate: dueDate ? new Date(dueDate) : null,
-        contactId: contactId ? parseInt(contactId) : null,
+        contactId: contactId ? parseInt(String(contactId), 10) : null,
         assignedTo: userEmail || 'unassigned',
         status: 'Pending'
       }
@@ -51,13 +52,13 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-export const updateTask = async (req: Request, res: Response): Promise<void> => {
+export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
 
     const task = await prisma.followUps.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(String(id), 10) },
       data: updateData
     });
 

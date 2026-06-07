@@ -18,5 +18,5 @@ RUN npm run build
 # Expose the port the backend runs on
 EXPOSE 5000
 
-# Start the application
-CMD ["npm", "start"]
+# Start the application and sync database schema
+CMD npx prisma db push && npm start

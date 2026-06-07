@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getDeals = async (req: Request, res: Response): Promise<void> => {
+export const getDeals = async (req, res) => {
   try {
     const userRole = req.user?.roleName;
     const userEmail = req.user?.roleName === 'Salesman' ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email : null;
@@ -14,7 +15,7 @@ export const getDeals = async (req: Request, res: Response): Promise<void> => {
     } else {
       deals = await prisma.deals.findMany({
         where: { assignedTo: userEmail || '' },
-        orderBy: { expectedCloseDate: 'asc' },
+        orderBy: { expectedCloseDate: 'asc' }
       });
     }
 
@@ -25,28 +26,28 @@ export const getDeals = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const createDeal = async (req: Request, res: Response): Promise<void> => {
+export const createDeal = async (req, res) => {
   try {
     const {
       dealName, value, stage, expectedCloseDate,
       contactName, company, assignedTo, probability, description
     } = req.body;
 
-    const userEmail = req.user?.roleName === 'Salesman'
-      ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email
-      : assignedTo;
+    const userEmail = req.user?.roleName === 'Salesman' ?
+    (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email :
+    assignedTo;
 
     const deal = await prisma.deals.create({
       data: {
         dealName,
-        value:             parseInt(value),
-        stage:             stage || 'Prospect',
+        value: parseInt(String(value), 10),
+        stage: stage || 'Prospect',
         expectedCloseDate: expectedCloseDate ? new Date(expectedCloseDate) : null,
-        contactName:       contactName  || null,
-        company:           company      || null,
-        assignedTo:        userEmail    || 'unassigned',
-        probability:       probability  ? parseInt(probability) : null,
-        description:       description  || null,
+        contactName: contactName || null,
+        company: company || null,
+        assignedTo: userEmail || 'unassigned',
+        probability: probability ? parseInt(String(probability), 10) : null,
+        description: description || null
       }
     });
 
@@ -57,13 +58,13 @@ export const createDeal = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-export const updateDeal = async (req: Request, res: Response): Promise<void> => {
+export const updateDeal = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
 
     const deal = await prisma.deals.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(String(id), 10) },
       data: updateData
     });
 

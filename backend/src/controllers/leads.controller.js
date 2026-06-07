@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 // Get all leads (Admins see all, Salesmen see assigned)
-export const getLeads = async (req: Request, res: Response): Promise<void> => {
+export const getLeads = async (req, res) => {
   try {
     const userRole = req.user?.roleName?.toLowerCase();
     const userEmail = userRole === 'salesman' ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email : null;
@@ -15,7 +16,7 @@ export const getLeads = async (req: Request, res: Response): Promise<void> => {
     } else {
       leads = await prisma.leads.findMany({
         where: { assignedTo: userEmail || '' },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: 'desc' }
       });
     }
 
@@ -27,7 +28,7 @@ export const getLeads = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Create a new lead
-export const createLead = async (req: Request, res: Response): Promise<void> => {
+export const createLead = async (req, res) => {
   try {
     const {
       name, email, phone, company, status, source, value, assignedTo,
@@ -35,29 +36,29 @@ export const createLead = async (req: Request, res: Response): Promise<void> => 
     } = req.body;
 
     const userRole = req.user?.roleName?.toLowerCase();
-    const userEmail = userRole === 'salesman'
-      ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email
-      : assignedTo;
+    const userEmail = userRole === 'salesman' ?
+    (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email :
+    assignedTo;
 
     const lead = await prisma.leads.create({
       data: {
         name,
         email,
-        phone:         phone         || null,
-        company:       company       || null,
-        status:        status        || 'New',
-        source:        source        || 'Manual',
-        assignedTo:    userEmail     || 'unassigned',
-        value:         value         || 0,
-        createdAt:     new Date(),
-        lastContact:   new Date(),
-        title:         title         || null,
-        website:       website       || null,
-        industry:      industry      || null,
+        phone: phone || null,
+        company: company || null,
+        status: status || 'New',
+        source: source || 'Manual',
+        assignedTo: userEmail || 'unassigned',
+        value: value || 0,
+        createdAt: new Date(),
+        lastContact: new Date(),
+        title: title || null,
+        website: website || null,
+        industry: industry || null,
         noOfEmployees: noOfEmployees || null,
         annualRevenue: annualRevenue || null,
-        rating:        rating        || null,
-        description:   description   || null,
+        rating: rating || null,
+        description: description || null
       }
     });
 
@@ -69,13 +70,13 @@ export const createLead = async (req: Request, res: Response): Promise<void> => 
 };
 
 // Update a lead (e.g., status change)
-export const updateLead = async (req: Request, res: Response): Promise<void> => {
+export const updateLead = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
 
     const lead = await prisma.leads.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(String(id), 10) },
       data: updateData
     });
 

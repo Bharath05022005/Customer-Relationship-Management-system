@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getSegments = async (req: Request, res: Response): Promise<void> => {
+export const getSegments = async (req, res) => {
   try {
     const segments = await prisma.customerSegments.findMany();
     res.json(segments);
@@ -13,7 +14,7 @@ export const getSegments = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const createSegment = async (req: Request, res: Response): Promise<void> => {
+export const createSegment = async (req, res) => {
   try {
     const { name, region, industry, interest, dealSize } = req.body;
 

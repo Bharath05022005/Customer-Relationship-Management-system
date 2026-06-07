@@ -10,31 +10,6 @@ interface Activity {
 }
 
 // ── Shared style constants ──────────────────────────────────────────────────
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 14px',
-  backgroundColor: '#1e293b',
-  background: '#1e293b',
-  border: '1px solid rgba(255,255,255,0.12)',
-  color: '#f9fafb',
-  borderRadius: '8px',
-  fontSize: '14px',
-  outline: 'none',
-  boxSizing: 'border-box' as const,
-  transition: 'border-color 0.2s',
-  fontFamily: 'inherit',
-};
-
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontSize: '11px',
-  fontWeight: 700,
-  color: 'rgba(255,255,255,0.45)',
-  marginBottom: '6px',
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.06em',
-};
-
 // ── Type configuration ───────────────────────────────────────────────────────
 const typeConfig: Record<string, { icon: string; dotColor: string; badgeBg: string; badgeColor: string }> = {
   Call:    { icon: '📞', dotColor: '#3b82f6', badgeBg: 'rgba(59,130,246,0.18)',  badgeColor: '#60a5fa' },
@@ -140,7 +115,7 @@ export const ActivityLog: React.FC = () => {
           />
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {activities.map((activity, index) => {
+            {activities.map((activity) => {
               const cfg = getTypeConfig(activity.type);
               return (
                 <div key={activity.id} style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '20px' }}>

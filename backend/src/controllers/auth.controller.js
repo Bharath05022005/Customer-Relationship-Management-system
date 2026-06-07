@@ -1,11 +1,12 @@
-import { Request, Response } from 'express';
+
+
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import prisma from '../db';
+import prisma from "../db.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-dev';
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -28,7 +29,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         email,
         password: hashedPassword,
         Role: 'Salesman'
-      },
+      }
     });
 
     res.status(201).json({ message: 'Salesman registered successfully', userId: user.id });
@@ -38,7 +39,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -47,10 +48,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const user = await prisma.salesman.findUnique({ 
+    const user = await prisma.salesman.findUnique({
       where: { email }
     });
-    
+
     if (!user) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
@@ -64,15 +65,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const token = jwt.sign({ userId: user.id, role: user.Role }, JWT_SECRET, { expiresIn: '1d' });
 
-    res.json({ 
-      message: 'Login successful', 
-      token, 
-      user: { 
-        id: user.id, 
-        name: user.username, 
+    res.json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        name: user.username,
         email: user.email,
-        role: user.Role 
-      } 
+        role: user.Role
+      }
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -80,7 +81,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const getUsers = async (req: Request, res: Response): Promise<void> => {
+export const getUsers = async (req, res) => {
   try {
     const users = await prisma.salesman.findMany({
       select: {

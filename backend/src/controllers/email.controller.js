@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+
+
 import nodemailer from 'nodemailer';
 import { PrismaClient } from '@prisma/client';
 
@@ -10,14 +11,14 @@ const transporter = nodemailer.createTransport({
   secure: process.env.EMAIL_SECURE === 'true',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    pass: process.env.EMAIL_PASS
+  }
 });
 
-export const sendEmail = async (req: Request, res: Response): Promise<void> => {
+export const sendEmail = async (req, res) => {
   try {
     const { to, subject, text, html } = req.body;
-    
+
     if (!to || !subject || !text) {
       res.status(400).json({ error: 'To, subject, and text are required.' });
       return;
@@ -28,7 +29,7 @@ export const sendEmail = async (req: Request, res: Response): Promise<void> => {
       to,
       subject,
       text,
-      html: html || text,
+      html: html || text
     });
 
     // Automatically log this action in ActivityLog

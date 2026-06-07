@@ -1,18 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
+
 import jwt from 'jsonwebtoken';
-import prisma from '../db';
+import prisma from "../db.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-dev';
 
-export interface AuthRequest extends Request {
-  user?: {
-    userId: number;
-    roleId: number;
-    roleName?: string;
-  };
-}
 
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+
+
+
+
+
+
+
+export const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,7 +21,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number; role: string };
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const user = await prisma.salesman.findUnique({ where: { id: decoded.userId } });
 
@@ -37,7 +37,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 
-export const requireAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const requireAdmin = (req, res, next) => {
   if (!req.user || req.user.roleName !== 'Admin') {
     res.status(403).json({ error: 'Forbidden: Admin access required' });
     return;

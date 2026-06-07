@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getProposals = async (req: Request, res: Response): Promise<void> => {
+export const getProposals = async (req, res) => {
   try {
     const userRole = req.user?.roleName;
     const userEmail = req.user?.roleName === 'Salesman' ? (await prisma.salesman.findUnique({ where: { id: req.user.userId } }))?.email : null;
@@ -14,7 +15,7 @@ export const getProposals = async (req: Request, res: Response): Promise<void> =
     } else {
       proposals = await prisma.quotations.findMany({
         where: { assignedTo: userEmail || '' },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: 'desc' }
       });
     }
 
@@ -25,7 +26,7 @@ export const getProposals = async (req: Request, res: Response): Promise<void> =
   }
 };
 
-export const createProposal = async (req: Request, res: Response): Promise<void> => {
+export const createProposal = async (req, res) => {
   try {
     const { clientName, email, item, price, quantity, assignedTo } = req.body;
 
@@ -37,9 +38,9 @@ export const createProposal = async (req: Request, res: Response): Promise<void>
         email,
         item,
         price,
-        quantity: parseInt(quantity),
+        quantity: parseInt(String(quantity), 10),
         assignedTo: userEmail || 'unassigned',
-        createdAt: new Date(),
+        createdAt: new Date()
       }
     });
 

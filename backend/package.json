@@ -2,10 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc",
-    "start": "node dist/src/server.js",
+    "dev": "node --watch src/server.js",
+    "build": "prisma generate",
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,17 +23,9 @@
     "nodemailer": "^8.0.8"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.9.1",
-    "@types/nodemailer": "^8.0.0",
-    "prisma": "^5.0.0",
-    "tsx": "^4.22.3",
-    "typescript": "^6.0.3"
+    "prisma": "^5.0.0"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   }
 }
