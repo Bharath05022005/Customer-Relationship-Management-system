@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE from '../../config/api.js';
 
 interface Activity {
   id: number;
@@ -44,7 +45,7 @@ export const ActivityLog: React.FC = () => {
 
   const fetchActivities = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/activity', {
+      const res = await fetch(`${API_BASE}/api/activity`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();

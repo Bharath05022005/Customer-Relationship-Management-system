@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE from '../../config/api.js';
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '12px 16px',
@@ -28,7 +29,7 @@ export const Emails: React.FC = () => {
     e.preventDefault();
     setStatus({ type: 'sending' });
     try {
-      const res = await fetch('http://localhost:5000/api/email/send', {
+      const res = await fetch(`${API_BASE}/api/email/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ to, subject, text: message }),

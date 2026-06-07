@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE from '../../config/api.js';
 
 interface Task {
   id: number;
@@ -77,7 +78,7 @@ export const Tasks: React.FC = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/tasks', {
+      const res = await fetch(`${API_BASE}/api/tasks`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -91,7 +92,7 @@ export const Tasks: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/users', {
+      const res = await fetch(`${API_BASE}/api/auth/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -119,7 +120,7 @@ export const Tasks: React.FC = () => {
         dueDate,
         assignedTo: isAdmin ? assignedTo : undefined,
       };
-      const res = await fetch('http://localhost:5000/api/tasks', {
+      const res = await fetch(`${API_BASE}/api/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

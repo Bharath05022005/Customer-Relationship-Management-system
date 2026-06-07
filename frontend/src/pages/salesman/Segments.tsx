@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE from '../../config/api.js';
 
 interface Segment {
   id: number;
@@ -41,7 +42,7 @@ export const Segments: React.FC = () => {
 
   const fetchSegments = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/segments', {
+      const res = await fetch(`${API_BASE}/api/segments`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -57,7 +58,7 @@ export const Segments: React.FC = () => {
   const handleAddSegment = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/segments', {
+      const res = await fetch(`${API_BASE}/api/segments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, region, industry, interest, dealSize }),

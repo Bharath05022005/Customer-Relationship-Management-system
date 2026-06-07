@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE from '../../config/api.js';
 
 interface Deal {
   id: number;
@@ -76,7 +77,7 @@ export const Pipeline: React.FC = () => {
 
   const fetchDeals = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/deals', {
+      const res = await fetch(`${API_BASE}/api/deals`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -99,7 +100,7 @@ export const Pipeline: React.FC = () => {
   const handleAddDeal = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/deals', {
+      const res = await fetch(`${API_BASE}/api/deals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

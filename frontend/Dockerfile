@@ -7,6 +7,11 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+# Accept the API URL as a build argument (injected from docker-compose)
+ARG VITE_API_URL=http://localhost:5000
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN npm run build
 
 # Stage 2: Serve the frontend using Nginx

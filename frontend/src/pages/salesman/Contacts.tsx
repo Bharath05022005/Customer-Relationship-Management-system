@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE from '../../config/api.js';
 
 interface Contact {
   id: number;
@@ -84,7 +85,7 @@ export const Contacts: React.FC = () => {
 
   const fetchContacts = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/contacts', {
+      const res = await fetch(`${API_BASE}/api/contacts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -107,7 +108,7 @@ export const Contacts: React.FC = () => {
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/contacts', {
+      const res = await fetch(`${API_BASE}/api/contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, title, email, secondaryEmail, phone, mobile, company, department, website, leadSource, assignedTo, notes }),

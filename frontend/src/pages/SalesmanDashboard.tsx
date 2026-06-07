@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Users, Briefcase, IndianRupee, CheckSquare } from 'lucide-react';
+import API_BASE from '../config/api.js';
 
 export const SalesmanDashboard: React.FC = () => {
   const { user, token } = useAuth();
@@ -14,9 +15,9 @@ export const SalesmanDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [leadsRes, tasksRes, dealsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/leads', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/tasks', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/deals', { headers: { Authorization: `Bearer ${token}` } })
+        fetch(`${API_BASE}/api/leads`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/tasks`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/deals`, { headers: { Authorization: `Bearer ${token}` } })
       ]);
 
       if (leadsRes.ok) {

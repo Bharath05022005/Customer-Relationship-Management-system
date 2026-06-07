@@ -6,6 +6,7 @@ import {
   PieChart, Pie, Cell, Legend,
   Area, AreaChart,
 } from 'recharts';
+import API_BASE from '../config/api.js';
 
 /* ── shared ── */
 const cardStyle: React.CSSProperties = {
@@ -77,11 +78,11 @@ export const AdminDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [usersRes, leadsRes, tasksRes, dealsRes, contactsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/auth/users',  { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/leads',       { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/tasks',       { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/deals',       { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/contacts',    { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/auth/users`,  { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/leads`,       { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/tasks`,       { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/deals`,       { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/contacts`,    { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       if (usersRes.ok) setUsers(await usersRes.json());
@@ -168,7 +169,7 @@ export const AdminDashboard: React.FC = () => {
     e.preventDefault();
     setLoading(true); setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, email, password }),
@@ -545,7 +546,7 @@ export const AdminDashboard: React.FC = () => {
             if (!title || !salesman) return;
             
             try {
-              await fetch('http://localhost:5000/api/tasks', {
+              await fetch(`${API_BASE}/api/tasks`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ title, type, assignedTo: salesman, dueDate: dueDate ? new Date(dueDate).toISOString() : new Date().toISOString() })
