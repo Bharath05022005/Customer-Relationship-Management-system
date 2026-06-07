@@ -120,7 +120,7 @@ export const Pipeline: React.FC = () => {
 
   const updateStage = async (id: number, newStage: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/deals/${id}`, {
+      const res = await fetch(`${API_BASE}/api/deals/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

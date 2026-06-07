@@ -187,7 +187,7 @@ export const AdminDashboard: React.FC = () => {
   const assignTask = async (taskId: number, salesmanEmail: string) => {
     if (!salesmanEmail) return;
     try {
-      await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      await fetch(`${API_BASE}/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ assignedTo: salesmanEmail }),

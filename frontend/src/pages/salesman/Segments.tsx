@@ -11,6 +11,19 @@ interface Segment {
   dealSize: string;
 }
 
+interface CustomerMatch {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  type: 'Lead' | 'Contact';
+  detail: string;
+  value?: number;
+  matchedCriteria: string[];
+}
+
+
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '10px 14px',
   backgroundColor: '#1e293b', background: '#1e293b',
@@ -40,6 +53,13 @@ export const Segments: React.FC = () => {
   const [interest, setInterest] = useState('');
   const [dealSize, setDealSize] = useState('');
 
+  // States for viewing matching customers
+  const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
+  const [viewCustomersModal, setViewCustomersModal] = useState(false);
+  const [matchingCustomers, setMatchingCustomers] = useState<CustomerMatch[]>([]);
+  const [loadingCustomers, setLoadingCustomers] = useState(false);
+  const [customersSearch, setCustomersSearch] = useState('');
+
   const fetchSegments = async () => {
     try {
       const res = await fetch(`${API_BASE}/api/segments`, {
@@ -66,6 +86,179 @@ export const Segments: React.FC = () => {
       if (res.ok) { setShowModal(false); fetchSegments(); resetForm(); }
     } catch (err) { console.error(err); }
   };
+
+  const handleViewCustomers = async (seg: Segment) => {
+    setSelectedSegment(seg);
+    setViewCustomersModal(true);
+    setLoadingCustomers(true);
+    setCustomersSearch('');
+    try {
+      const [leadsRes, contactsRes] = await Promise.all([
+        fetch(`${API_BASE}/api/leads`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/contacts`, { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+
+      const leads = leadsRes.ok ? await leadsRes.json() : [];
+      const contacts = contactsRes.ok ? await contactsRes.json() : [];
+
+      const matches: CustomerMatch[] = [];
+
+      const checkMatch = (item: any, isLead: boolean) => {
+        const matched: string[] = [];
+
+        // 1. Region
+        if (seg.region) {
+          const regionLower = seg.region.toLowerCase().trim();
+          const descLower = (item.description || '').toLowerCase();
+          const notesLower = (item.notes || '').toLowerCase();
+          const nameLower = (item.name || '').toLowerCase();
+          const compLower = (item.company || '').toLowerCase();
+          const deptLower = (item.department || '').toLowerCase();
+          
+          if (
+            descLower.includes(regionLower) ||
+            notesLower.includes(regionLower) ||
+            nameLower.includes(regionLower) ||
+            compLower.includes(regionLower) ||
+            deptLower.includes(regionLower)
+          ) {
+            matched.push(`Region: ${seg.region}`);
+          } else {
+            return null;
+          }
+        }
+
+        // 2. Industry
+        if (seg.industry) {
+          const indLower = seg.industry.toLowerCase().trim();
+          const itemIndLower = (item.industry || '').toLowerCase();
+          const descLower = (item.description || '').toLowerCase();
+          const notesLower = (item.notes || '').toLowerCase();
+          const deptLower = (item.department || '').toLowerCase();
+
+          if (
+            itemIndLower.includes(indLower) ||
+            descLower.includes(indLower) ||
+            notesLower.includes(indLower) ||
+            deptLower.includes(indLower)
+          ) {
+            matched.push(`Industry: ${seg.industry}`);
+          } else {
+            return null;
+          }
+        }
+
+        // 3. Product Interest
+        if (seg.interest) {
+          const intLower = seg.interest.toLowerCase().trim();
+          const titleLower = (item.title || '').toLowerCase();
+          const descLower = (item.description || '').toLowerCase();
+          const notesLower = (item.notes || '').toLowerCase();
+
+          if (
+            titleLower.includes(intLower) ||
+            descLower.includes(intLower) ||
+            notesLower.includes(intLower)
+          ) {
+            matched.push(`Interest: ${seg.interest}`);
+          } else {
+            return null;
+          }
+        }
+
+        // 4. Deal Size
+        if (seg.dealSize) {
+          if (isLead) {
+            const val = Number(item.value) || 0;
+            const sizeStr = seg.dealSize;
+            let dealMatch = false;
+            if (sizeStr.includes('<5L') || sizeStr.includes('< 5L') || sizeStr.includes('<₹5L')) {
+              if (val < 500000) dealMatch = true;
+            } else if (sizeStr.includes('5L–20L') || sizeStr.includes('5L – 20L') || sizeStr.includes('5L–₹20L') || sizeStr.includes('5L-20L')) {
+              if (val >= 500000 && val <= 2000000) dealMatch = true;
+            } else if (sizeStr.includes('>20L') || sizeStr.includes('> 20L') || sizeStr.includes('>₹20L')) {
+              if (val > 2000000) dealMatch = true;
+            }
+
+            if (dealMatch) {
+              matched.push(`Deal Size: ${seg.dealSize}`);
+            } else {
+              return null;
+            }
+          } else {
+            const notesLower = (item.notes || '').toLowerCase();
+            const sizeStr = seg.dealSize.toLowerCase();
+            if (notesLower.includes(sizeStr) || (notesLower.includes('enterprise') && sizeStr.includes('enterprise'))) {
+              matched.push(`Deal Size: ${seg.dealSize}`);
+            } else {
+              return null;
+            }
+          }
+        }
+
+        if (!seg.region && !seg.industry && !seg.interest && !seg.dealSize) {
+          matched.push('General Match');
+        }
+
+        return matched;
+      };
+
+      leads.forEach((lead: any) => {
+        const criteria = checkMatch(lead, true);
+        if (criteria) {
+          matches.push({
+            id: lead.id,
+            name: lead.name,
+            email: lead.email,
+            phone: lead.phone || 'N/A',
+            company: lead.company || 'N/A',
+            type: 'Lead',
+            detail: lead.value ? `Value: ₹${(Number(lead.value) / 100000).toFixed(1)}L` : 'Value: ₹0',
+            value: Number(lead.value) || 0,
+            matchedCriteria: criteria
+          });
+        }
+      });
+
+      contacts.forEach((contact: any) => {
+        const criteria = checkMatch(contact, false);
+        if (criteria) {
+          matches.push({
+            id: contact.id,
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone || contact.mobile || 'N/A',
+            company: contact.company || 'N/A',
+            type: 'Contact',
+            detail: contact.leadSource ? `Source: ${contact.leadSource}` : 'N/A',
+            matchedCriteria: criteria
+          });
+        }
+      });
+
+      setMatchingCustomers(matches);
+    } catch (err) {
+      console.error('Error fetching matching customers:', err);
+    } finally {
+      setLoadingCustomers(false);
+    }
+  };
+
+  const filteredCustomers = matchingCustomers.filter(c => {
+    const term = customersSearch.toLowerCase().trim();
+    if (!term) return true;
+    return c.name.toLowerCase().includes(term) ||
+           c.email.toLowerCase().includes(term) ||
+           c.company.toLowerCase().includes(term) ||
+           c.phone.toLowerCase().includes(term);
+  });
+
+  const totalMatches = matchingCustomers.length;
+  const leadsCount = matchingCustomers.filter(c => c.type === 'Lead').length;
+  const contactsCount = matchingCustomers.filter(c => c.type === 'Contact').length;
+  const totalValue = matchingCustomers
+    .filter(c => c.type === 'Lead')
+    .reduce((sum, c) => sum + (c.value || 0), 0);
 
   return (
     <div className="page-container">
@@ -145,12 +338,14 @@ export const Segments: React.FC = () => {
                   ))}
                 </div>
 
-                <button style={{
-                  width: '100%', marginTop: '20px', padding: '9px',
-                  background: color + '15', border: `1px solid ${color}44`,
-                  color: color, borderRadius: '8px', cursor: 'pointer',
-                  fontWeight: 700, fontSize: '13px', transition: 'background 0.2s',
-                }}
+                <button
+                  onClick={() => handleViewCustomers(seg)}
+                  style={{
+                    width: '100%', marginTop: '20px', padding: '9px',
+                    background: color + '15', border: `1px solid ${color}44`,
+                    color: color, borderRadius: '8px', cursor: 'pointer',
+                    fontWeight: 700, fontSize: '13px', transition: 'background 0.2s',
+                  }}
                   onMouseEnter={e => (e.currentTarget.style.background = color + '30')}
                   onMouseLeave={e => (e.currentTarget.style.background = color + '15')}
                 >
@@ -262,6 +457,212 @@ export const Segments: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── VIEW CUSTOMERS MODAL ── */}
+      {viewCustomersModal && selectedSegment && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+        }}>
+          <div className="glass-panel" style={{
+            width: '950px', maxWidth: '95vw', maxHeight: '90vh',
+            overflowY: 'auto', borderRadius: '18px',
+            boxShadow: '0 30px 80px rgba(0,0,0,0.65)',
+            display: 'flex', flexDirection: 'column',
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: '24px 28px',
+              borderBottom: '1px solid rgba(255,255,255,0.07)',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '20px' }}>🎯</span>
+                  <h2 style={{ fontSize: '20px', fontWeight: 700, margin: 0 }}>
+                    {selectedSegment.name} Customers
+                  </h2>
+                </div>
+                {/* Criteria badging */}
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
+                  {[
+                    { label: 'Region', val: selectedSegment.region },
+                    { label: 'Industry', val: selectedSegment.industry },
+                    { label: 'Interest', val: selectedSegment.interest },
+                    { label: 'Deal Size', val: selectedSegment.dealSize },
+                  ].filter(c => c.val).map(c => (
+                    <span key={c.label} style={{
+                      fontSize: '11px', background: 'rgba(255,255,255,0.08)',
+                      color: 'rgba(255,255,255,0.65)', padding: '2px 8px', borderRadius: '4px',
+                      border: '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                      <strong>{c.label}:</strong> {c.val}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <button onClick={() => setViewCustomersModal(false)}
+                style={{
+                  background: 'rgba(255,255,255,0.08)', border: 'none', color: 'white',
+                  width: '34px', height: '34px', borderRadius: '50%', cursor: 'pointer',
+                  fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>×</button>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              
+              {/* Stats Panel */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                gap: '14px',
+              }}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase' }}>Total Matches</div>
+                  <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px', color: 'var(--primary-color)' }}>
+                    {loadingCustomers ? '...' : totalMatches}
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase' }}>Leads</div>
+                  <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px', color: '#3b82f6' }}>
+                    {loadingCustomers ? '...' : leadsCount}
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase' }}>Contacts</div>
+                  <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px', color: '#10b981' }}>
+                    {loadingCustomers ? '...' : contactsCount}
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase' }}>Pipeline Value</div>
+                  <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px', color: '#f59e0b' }}>
+                    {loadingCustomers ? '...' : `₹${(totalValue / 100000).toFixed(1)}L`}
+                  </div>
+                </div>
+              </div>
+
+              {/* Search Control */}
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  placeholder="Search by name, company, email..."
+                  value={customersSearch}
+                  onChange={e => setCustomersSearch(e.target.value)}
+                  style={{ ...inputStyle, flex: 1 }}
+                />
+              </div>
+
+              {/* Customer List Table */}
+              <div className="table-responsive" style={{
+                maxHeight: '350px',
+                overflowY: 'auto',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '10px',
+                background: 'rgba(0,0,0,0.2)',
+              }}>
+                {loadingCustomers ? (
+                  <div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>
+                    <span>🔄 Fetching customers & matching criteria...</span>
+                  </div>
+                ) : filteredCustomers.length === 0 ? (
+                  <div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>
+                    <span>🔍 No matching customers found.</span>
+                  </div>
+                ) : (
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'left' }}>
+                        <th style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Name</th>
+                        <th style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Type</th>
+                        <th style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Company</th>
+                        <th style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Contact info</th>
+                        <th style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Matched Filters</th>
+                        <th style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredCustomers.map(customer => {
+                        const isLead = customer.type === 'Lead';
+                        return (
+                          <tr key={`${customer.type}-${customer.id}`} style={{
+                            borderBottom: '1px solid rgba(255,255,255,0.05)',
+                            transition: 'background 0.2s',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                          >
+                            <td style={{ padding: '12px 16px', fontWeight: 600, color: '#f9fafb' }}>
+                              {customer.name}
+                            </td>
+                            <td style={{ padding: '12px 16px' }}>
+                              <span style={{
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                padding: '2px 8px',
+                                borderRadius: '4px',
+                                background: isLead ? 'rgba(59,130,246,0.15)' : 'rgba(16,185,129,0.15)',
+                                color: isLead ? '#3b82f6' : '#10b981',
+                              }}>
+                                {customer.type}
+                              </span>
+                            </td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{customer.company}</td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.6)' }}>
+                              <div>{customer.email}</div>
+                              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginTop: '2px' }}>{customer.phone}</div>
+                            </td>
+                            <td style={{ padding: '12px 16px' }}>
+                              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                                {customer.matchedCriteria.map((crit, idx) => (
+                                  <span key={idx} style={{
+                                    fontSize: '10px',
+                                    background: 'rgba(139,92,246,0.15)',
+                                    color: '#8b5cf6',
+                                    padding: '1px 6px',
+                                    borderRadius: '3px',
+                                  }}>
+                                    {crit}
+                                  </span>
+                                ))}
+                              </div>
+                            </td>
+                            <td style={{ padding: '12px 16px', color: isLead ? '#f59e0b' : 'rgba(255,255,255,0.5)', fontWeight: isLead ? 600 : 400 }}>
+                              {customer.detail}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div style={{
+              padding: '18px 28px',
+              borderTop: '1px solid rgba(255,255,255,0.07)',
+              display: 'flex', justifyContent: 'flex-end',
+              background: 'rgba(0,0,0,0.1)'
+            }}>
+              <button onClick={() => setViewCustomersModal(false)}
+                style={{
+                  padding: '9px 24px', background: 'transparent',
+                  border: '1px solid rgba(255,255,255,0.18)', color: 'white',
+                  borderRadius: '8px', cursor: 'pointer', fontWeight: 600,
+                  fontSize: '13px'
+                }}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

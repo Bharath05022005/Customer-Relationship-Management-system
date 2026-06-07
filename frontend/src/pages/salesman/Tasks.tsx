@@ -144,7 +144,7 @@ export const Tasks: React.FC = () => {
 
   const updateStatus = async (id: number, newStatus: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      const res = await fetch(`${API_BASE}/api/tasks/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
