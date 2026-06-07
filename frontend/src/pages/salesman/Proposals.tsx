@@ -73,6 +73,212 @@ export const Proposals: React.FC = () => {
     } catch (err) { console.error(err); }
   };
 
+  const handleDownloadProposal = (p: Proposal) => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const issueDate = new Date(p.createdAt).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    
+    const totalAmount = Number(p.price) * Number(p.quantity);
+
+    const html = `
+      <html>
+        <head>
+          <title>Quotation - ${p.clientName}</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+            body {
+              font-family: 'Inter', sans-serif;
+              color: #1e293b;
+              padding: 40px;
+              background: #fff;
+            }
+            .header {
+              display: flex;
+              justify-content: space-between;
+              border-bottom: 2px solid #3b82f6;
+              padding-bottom: 20px;
+              margin-bottom: 30px;
+            }
+            .logo {
+              font-size: 28px;
+              font-weight: 800;
+              color: #1e3a8a;
+              letter-spacing: 1px;
+            }
+            .quote-title {
+              font-size: 24px;
+              font-weight: 700;
+              text-align: right;
+              color: #3b82f6;
+            }
+            .details {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 40px;
+            }
+            .details h3 {
+              font-size: 14px;
+              color: #64748b;
+              text-transform: uppercase;
+              margin-bottom: 8px;
+              letter-spacing: 0.05em;
+              margin-top: 0;
+            }
+            .details p {
+              margin: 4px 0;
+              font-size: 15px;
+              font-weight: 500;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 40px;
+            }
+            th {
+              background: #f1f5f9;
+              color: #475569;
+              font-weight: 600;
+              text-align: left;
+              padding: 12px 16px;
+              font-size: 14px;
+            }
+            td {
+              padding: 16px;
+              border-bottom: 1px solid #e2e8f0;
+              font-size: 15px;
+            }
+            .total-section {
+              display: flex;
+              justify-content: flex-end;
+              margin-bottom: 40px;
+            }
+            .total-table {
+              width: 300px;
+            }
+            .total-table tr td {
+              padding: 8px 12px;
+              border: none;
+            }
+            .total-table tr.grand-total td {
+              font-weight: 700;
+              font-size: 18px;
+              color: #1e3a8a;
+              border-top: 2px solid #e2e8f0;
+              padding-top: 12px;
+            }
+            .footer {
+              margin-top: 80px;
+              text-align: center;
+              font-size: 12px;
+              color: #94a3b8;
+              border-top: 1px solid #e2e8f0;
+              padding-top: 20px;
+            }
+            @media print {
+              body {
+                padding: 0;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              <div class="logo">CUSTORA</div>
+              <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b;">Customer Relationship Management</p>
+            </div>
+            <div>
+              <div class="quote-title">QUOTATION</div>
+              <p style="margin: 4px 0 0 0; text-align: right; font-size: 14px; color: #64748b;">Quote #: CUST-${p.id}-${new Date(p.createdAt).getFullYear()}</p>
+            </div>
+          </div>
+
+          <div class="details">
+            <div>
+              <h3>Quotation For</h3>
+              <p><strong>${p.clientName}</strong></p>
+              <p>Email: ${p.email}</p>
+            </div>
+            <div style="text-align: right;">
+              <h3>Quotation Details</h3>
+              <p>Date Issued: ${issueDate}</p>
+              <p>Validity: 30 Days</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50%;">Product / Service Description</th>
+                <th style="text-align: right;">Unit Price</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>${p.item}</strong></td>
+                <td style="text-align: right;">₹${Number(p.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td style="text-align: center;">${p.quantity}</td>
+                <td style="text-align: right;"><strong>₹${totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="total-section">
+            <table class="total-table">
+              <tr>
+                <td>Subtotal:</td>
+                <td style="text-align: right;">₹${totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              </tr>
+              <tr>
+                <td>GST (18%):</td>
+                <td style="text-align: right;">₹${(totalAmount * 0.18).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              </tr>
+              <tr class="grand-total">
+                <td>Total Amount:</td>
+                <td style="text-align: right;">₹${(totalAmount * 1.18).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="margin-top: 60px; display: flex; justify-content: space-between;">
+            <div style="width: 200px;">
+              <p style="font-size: 13px; color: #64748b; margin-bottom: 40px;">Prepared By:</p>
+              <div style="border-bottom: 1px solid #94a3b8;"></div>
+              <p style="font-size: 12px; color: #64748b; margin-top: 4px; text-align: center;">Authorized Signatory</p>
+            </div>
+            <div style="width: 200px; text-align: right;">
+              <p style="font-size: 13px; color: #64748b; margin-bottom: 40px;">Accepted By:</p>
+              <div style="border-bottom: 1px solid #94a3b8;"></div>
+              <p style="font-size: 12px; color: #64748b; margin-top: 4px; text-align: center;">Client Signature</p>
+            </div>
+          </div>
+
+          <div class="footer">
+            Thank you for choosing Custora. For any questions regarding this quote, contact support@vaaltic.com.
+          </div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            }
+          </script>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
   const total = (parseFloat(price) || 0) * (parseInt(quantity) || 1);
 
   return (
@@ -147,11 +353,13 @@ export const Proposals: React.FC = () => {
                     {new Date(p.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
                   <td style={{ padding: '14px 16px' }}>
-                    <button style={{
-                      background: 'transparent', border: '1px solid rgba(59,130,246,0.5)',
-                      color: '#3b82f6', padding: '6px 14px', borderRadius: '6px',
-                      cursor: 'pointer', fontSize: '12px', fontWeight: 600, transition: 'background 0.2s',
-                    }}
+                    <button 
+                      onClick={() => handleDownloadProposal(p)}
+                      style={{
+                        background: 'transparent', border: '1px solid rgba(59,130,246,0.5)',
+                        color: '#3b82f6', padding: '6px 14px', borderRadius: '6px',
+                        cursor: 'pointer', fontSize: '12px', fontWeight: 600, transition: 'background 0.2s',
+                      }}
                       onMouseEnter={e => (e.currentTarget.style.background = 'rgba(59,130,246,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                     >
