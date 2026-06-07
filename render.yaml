@@ -33,7 +33,6 @@ services:
     rootDir: frontend
     buildCommand: npm run build
     staticPublishPath: dist
-    plan: free
     envVars:
       - key: VITE_API_URL
         sync: false # You will enter your backend's public URL (e.g. https://crm-backend.onrender.com) during deployment
